@@ -22,4 +22,13 @@
         <url-pattern>/login</url-pattern>
     </servlet-mapping>
     
+    <servlet>
+        <servlet-name>SignUpController</servlet-name>
+        <servlet-class>com.controllers.SignUpController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SignUpController</servlet-name>
+        <url-pattern>/sign-up</url-pattern>
+    </servlet-mapping>
+    
 </web-app>
