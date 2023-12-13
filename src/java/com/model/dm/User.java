@@ -53,6 +53,17 @@ public class User {
         this.password = password;
         this.avatar = avatar;
     }
+
+    public User(String firstName, String lastName, Date dob, String sex, String country, String phone, String email, String password) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.dob = dob;
+        this.sex = sex;
+        this.country = country;
+        this.phone = phone;
+        this.email = email;
+        this.password = password;
+    }
     
     
 

@@ -35,7 +35,7 @@ public class UserDAO implements I_DAO<User>{
             Connection con = JDBCUtil.getConnection();
             
             String sql = "INSERT INTO user(UserId, firstName, lastName, dob, sex, country, phone, email, password)"
-                    + "VALUES(UUID_TO_BIN(UUID()), ?, ?, ?, ?, ?, ?, ?, ?)";
+                    + "VALUES(MD5(UUID()), ?, ?, ?, ?, ?, ?, ?, ?)";
             
             PreparedStatement pst = con.prepareStatement(sql);
             
@@ -74,7 +74,41 @@ public class UserDAO implements I_DAO<User>{
 
     @Override
     public ArrayList<User> selectAll() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        ArrayList<User> res = new ArrayList<User>();
+        try {
+            
+            Connection con = JDBCUtil.getConnection();
+            
+            String sql = "SELECT * FROM user";
+            
+            PreparedStatement pst = con.prepareStatement(sql);
+            
+            ResultSet rs = pst.executeQuery();
+            
+            while(rs.next()) {
+                String id = rs.getString("UserId");
+                String firstName = rs.getString("firstName");
+                String lastName = rs.getString("lastName");
+                Date dob = rs.getDate("dob");
+                String sex = rs.getString("sex");
+                String country = rs.getString("country");
+                String phone = rs.getString("phone");
+                String email = rs.getString("email");
+                String password = rs.getString("password");
+                String avatar = rs.getString("avatar");
+                
+                User user = new User(id, firstName, lastName, dob, sex, country, phone, email, password, avatar);
+                
+                res.add(user);
+            }
+            JDBCUtil.closeConnection(con);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return res;
+        
     }
 
     @Override
@@ -147,6 +181,44 @@ public class UserDAO implements I_DAO<User>{
             result = ""; 
         }
         return result;
+        
+    }
+    
+    public User checkAccessToHome(String id) {
+        
+        User res = null;
+        ArrayList<User> check = selectAll();
+        for (User user : check) {
+            if (Util.encryptPassword(user.getUserId()).equals(id)) {
+                res = user;
+            }
+        }
+        return res;
+    }
+    
+    public boolean checkDuplicateEmail(String email) {
+        
+        boolean res = true;
+        ArrayList<User> check = selectAll();
+        for (User user : check) {
+            if (email.trim().equals(user.getEmail())) {
+                res = false;
+            }
+        }
+        return res;
+        
+    }
+    
+    public boolean checkDuplicatePhone(String phone) {
+        
+        boolean res = true;
+        ArrayList<User> check = selectAll();
+        for (User user : check) {
+            if (phone.trim().equals(user.getPhone())) {
+                res = false;
+            }
+        }
+        return res;
         
     }
     

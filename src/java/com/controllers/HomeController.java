@@ -32,8 +32,8 @@ public class HomeController extends HttpServlet{
         Cookie[] cookies = req.getCookies();
         for (Cookie cookie : cookies) {
             if (cookie.getName().equals("id")) {
-                String id = String.valueOf(cookie.getValue());
-                user = UserDAO.getInstance().selectById(id);
+                String id = cookie.getValue();
+                user = UserDAO.getInstance().checkAccessToHome(id);
                 break;
             }
         }

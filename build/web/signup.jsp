@@ -44,6 +44,9 @@
     <body> 
         <div class="signup-container">
             <h1>Sign Up</h1>
+            <c:if test="${requestScope.error != null}">
+                <p style="color: red;">${requestScope.error}</p>
+            </c:if>
             <form method="post">
                 <label for="email">Email:</label>
                 <input type="email" id="email" name="email" required>
@@ -65,8 +68,8 @@
                 <br>
                 <label for="sex">Sex:</label>
                 <select id="sex" name="sex" required>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
                 </select>
                 <br>
                 <label for="country">Country:</label>

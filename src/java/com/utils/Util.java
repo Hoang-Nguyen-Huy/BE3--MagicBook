@@ -14,6 +14,11 @@ import java.security.NoSuchAlgorithmException;
  */
 public class Util {
     
+    /*
+    *
+    *encryptPassword use for encrypting password before save to db
+    *encryptPassword use for ecrypting id before assgin to cookie.Value();
+    */
     public static String encryptPassword(String password) {
         
             try {

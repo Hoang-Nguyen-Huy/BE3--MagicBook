@@ -6,6 +6,7 @@
 package com.controllers;
 
 import com.model.dao.UserDAO;
+import com.utils.Util;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -29,10 +30,10 @@ public class LoginController extends HttpServlet{
         
         String email = req.getParameter("email");
         String password = req.getParameter("password");
-        String userId = UserDAO.getInstance().login(email, password); // chua duoc ma hoa
+        String userId = UserDAO.getInstance().login(email, password);
         if (!userId.equals("")) {
             // lấy id là cookie.name, còn userId là cookie.value
-            Cookie cookie = new Cookie("id", userId); 
+            Cookie cookie = new Cookie("id", Util.encryptPassword(userId)); 
             resp.addCookie(cookie);
             resp.sendRedirect("home");
         } else {

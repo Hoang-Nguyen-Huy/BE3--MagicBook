@@ -5,7 +5,11 @@
  */
 package com.controllers;
 
+import com.model.dao.UserDAO;
+import com.model.dm.User;
+import com.utils.Util;
 import java.io.IOException;
+import java.sql.Date;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +23,26 @@ public class SignUpController extends HttpServlet{
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPost(req, resp); //To change body of generated methods, choose Tools | Templates.
+        
+        String firstName = req.getParameter("firstName");
+        String lastName = req.getParameter("lastName");
+        String dob = req.getParameter("dob");
+        String sex = req.getParameter("sex");
+        String country = req.getParameter("country");
+        String phone = req.getParameter("phone");
+        String email = req.getParameter("email");
+        String password = req.getParameter("password");
+        
+        User user = new User(firstName, lastName, Date.valueOf(dob), sex, country, phone, email, password);
+        
+        if (!UserDAO.getInstance().checkDuplicateEmail(email) || !UserDAO.getInstance().checkDuplicatePhone(phone)) {
+            req.setAttribute("error", "Email or phone are duplicated");
+            req.getRequestDispatcher("signup.jsp").forward(req, resp);
+        }
+        
+        UserDAO.getInstance().insert(user);
+        
+        resp.sendRedirect("login");
     }
 
     @Override
