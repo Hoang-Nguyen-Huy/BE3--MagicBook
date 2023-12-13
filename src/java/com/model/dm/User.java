@@ -42,6 +42,20 @@ public class User {
         this.avatar = avatar;
     }
 
+    public User(String firstName, String lastName, Date dob, String sex, String country, String phone, String email, String password, String avatar) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.dob = dob;
+        this.sex = sex;
+        this.country = country;
+        this.phone = phone;
+        this.email = email;
+        this.password = password;
+        this.avatar = avatar;
+    }
+    
+    
+
     public String getUserId() {
         return UserId;
     }
@@ -121,5 +135,12 @@ public class User {
     public void setAvatar(String avatar) {
         this.avatar = avatar;
     }
+
+    @Override
+    public String toString() {
+        return "User{" + "firstName=" + firstName + ", lastName=" + lastName + ", dob=" + dob + ", sex=" + sex + ", country=" + country + ", phone=" + phone + ", email=" + email + ", password=" + password + ", avatar=" + avatar + '}';
+    }
+    
+    
  
 }

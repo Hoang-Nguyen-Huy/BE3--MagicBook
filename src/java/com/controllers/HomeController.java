@@ -5,8 +5,11 @@
  */
 package com.controllers;
 
+import com.model.dao.UserDAO;
+import com.model.dm.User;
 import java.io.IOException;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,7 +27,22 @@ public class HomeController extends HttpServlet{
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher("home.jsp").forward(req, resp);
+        
+        User user = null;
+        Cookie[] cookies = req.getCookies();
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals("id")) {
+                String id = String.valueOf(cookie.getValue());
+                user = UserDAO.getInstance().selectById(id);
+                break;
+            }
+        }
+        if (user != null) {
+            req.getRequestDispatcher("home.jsp").forward(req, resp);
+        } else {
+            resp.sendRedirect(req.getContextPath());
+        }
+            
     }
     
     

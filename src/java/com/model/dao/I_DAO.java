@@ -21,7 +21,7 @@ public interface I_DAO<T> {
     
     public ArrayList<T> selectAll();
     
-    public T selectById(T t);
+    public T selectById(String id);
     
     public ArrayList<T> selectByCondition(String condition);
     

@@ -45,7 +45,7 @@
     <div class="login-container">
         <h1>Login</h1>
         <c:if test="${requestScope.error != null}">
-            <p>${requestScope.error}</p>
+            <p style="color: red;">${requestScope.error}</p>
         </c:if>
         <form method="post">
             <label for="emailPhone">Email or Phone:</label>

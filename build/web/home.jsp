@@ -221,7 +221,7 @@
                 <div id="myDropdown" class="dropdown-content">
                     <a href="profile?id="><img src="DefaultImg\avatar-icon.png" width="20px" height="20px"> UserName</a>
                     <a href="#">Settings</a>
-                    <a href="#">Log out</a>
+                    <a href="logout">Log out</a>
                 </div>
             </div>
         </header>

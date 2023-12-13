@@ -9,6 +9,7 @@ import com.model.dm.User;
 import com.utils.JDBCUtil;
 import com.utils.Util;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -77,8 +78,42 @@ public class UserDAO implements I_DAO<User>{
     }
 
     @Override
-    public User selectById(User t) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public User selectById(String id) {
+        
+        User result = null;
+        try {
+            
+            Connection con = JDBCUtil.getConnection();
+            
+            String sql = "SELECT * FROM user"
+                    + " WHERE UserId = ?";
+            
+            PreparedStatement pst = con.prepareStatement(sql);
+            
+            pst.setString(1, id);
+            
+            ResultSet rs = pst.executeQuery();
+            
+            while(rs.next()) {
+                String firstName = rs.getString("firstName");
+                String lastName = rs.getString("lastName");
+                Date dob = rs.getDate("dob");
+                String sex = rs.getString("sex");
+                String country = rs.getString("country");
+                String phone = rs.getString("phone");
+                String email = rs.getString("email");
+                String password = rs.getString("password");
+                String avatar = rs.getString("avatar");
+                
+                result = new User(firstName, lastName, dob, sex, country, phone, email, password, avatar);
+            }
+            JDBCUtil.closeConnection(con);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+                
     }
 
     @Override

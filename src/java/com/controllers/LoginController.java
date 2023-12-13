@@ -29,7 +29,7 @@ public class LoginController extends HttpServlet{
         
         String email = req.getParameter("email");
         String password = req.getParameter("password");
-        String userId = UserDAO.getInstance().login(email, password);
+        String userId = UserDAO.getInstance().login(email, password); // chua duoc ma hoa
         if (!userId.equals("")) {
             // lấy id là cookie.name, còn userId là cookie.value
             Cookie cookie = new Cookie("id", userId); 
