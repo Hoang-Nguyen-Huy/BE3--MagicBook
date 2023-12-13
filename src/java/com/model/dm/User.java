@@ -13,7 +13,7 @@ import java.sql.Date;
  */
 public class User {
     
-    private int UserId;
+    private String UserId;
     private String firstName;
     private String lastName;
     private Date dob;
@@ -29,7 +29,7 @@ public class User {
         this.password = password;
     }
 
-    public User(int UserId, String firstName, String lastName, Date dob, String sex, String country, String phone, String email, String password, String avatar) {
+    public User(String UserId, String firstName, String lastName, Date dob, String sex, String country, String phone, String email, String password, String avatar) {
         this.UserId = UserId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -42,11 +42,11 @@ public class User {
         this.avatar = avatar;
     }
 
-    public int getUserId() {
+    public String getUserId() {
         return UserId;
     }
 
-    public void setUserId(int UserId) {
+    public void setUserId(String UserId) {
         this.UserId = UserId;
     }
 
@@ -121,5 +121,5 @@ public class User {
     public void setAvatar(String avatar) {
         this.avatar = avatar;
     }
-    
+ 
 }

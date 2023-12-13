@@ -3,7 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Dell%20Latitude%207490/Documents/NetBeansProjects/MagicBook/web/home.jsp</file>
+            <file>file:/C:/Users/Dell%20Latitude%207490/Documents/NetBeansProjects/MagicBook/web/WEB-INF/web.xml</file>
+            <file>file:/C:/Users/Dell%20Latitude%207490/Documents/NetBeansProjects/MagicBook/web/login.jsp</file>
+            <file>file:/C:/Users/Dell%20Latitude%207490/Documents/NetBeansProjects/MagicBook/src/java/com/controllers/LoginController.java</file>
+            <file>file:/C:/Users/Dell%20Latitude%207490/Documents/NetBeansProjects/MagicBook/src/java/com/model/dao/UserDAO.java</file>
+            <file>file:/C:/Users/Dell%20Latitude%207490/Documents/NetBeansProjects/MagicBook/src/java/com/model/dm/User.java</file>
         </group>
     </open-files>
 </project-private>

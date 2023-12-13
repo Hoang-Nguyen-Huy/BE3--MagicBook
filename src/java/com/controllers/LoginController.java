@@ -5,8 +5,10 @@
  */
 package com.controllers;
 
+import com.model.dao.UserDAO;
 import java.io.IOException;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,9 +26,20 @@ public class LoginController extends HttpServlet{
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPost(req, resp); //To change body of generated methods, choose Tools | Templates.
+        
+        String email = req.getParameter("email");
+        String password = req.getParameter("password");
+        String userId = UserDAO.getInstance().login(email, password);
+        if (!userId.equals("")) {
+            // lấy id là cookie.name, còn userId là cookie.value
+            Cookie cookie = new Cookie("id", userId); 
+            resp.addCookie(cookie);
+            resp.sendRedirect("home");
+        } else {
+            req.setAttribute("error", "Wrong email or password");
+            req.getRequestDispatcher("login.jsp").forward(req, resp);
+        }
+        
     }
-    
-    
-    
+       
 }

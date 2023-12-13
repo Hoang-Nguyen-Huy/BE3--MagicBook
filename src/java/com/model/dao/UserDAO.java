@@ -7,8 +7,11 @@ package com.model.dao;
 
 import com.model.dm.User;
 import com.utils.JDBCUtil;
+import com.utils.Util;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -30,8 +33,8 @@ public class UserDAO implements I_DAO<User>{
             
             Connection con = JDBCUtil.getConnection();
             
-            String sql = "INSERT INTO user(firstName, lastName, dob, sex, country, phone, email, password)"
-                    + "VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO user(UserId, firstName, lastName, dob, sex, country, phone, email, password)"
+                    + "VALUES(UUID_TO_BIN(UUID()), ?, ?, ?, ?, ?, ?, ?, ?)";
             
             PreparedStatement pst = con.prepareStatement(sql);
             
@@ -42,7 +45,7 @@ public class UserDAO implements I_DAO<User>{
             pst.setString(5, user.getCountry());
             pst.setString(6, user.getPhone());
             pst.setString(7, user.getEmail());
-            pst.setString(8, user.getPassword());
+            pst.setString(8, Util.encryptPassword(user.getPassword())); // mã hóa mật khẩu trước khi đưa vào db
             
             result = pst.executeUpdate();
             
@@ -81,6 +84,35 @@ public class UserDAO implements I_DAO<User>{
     @Override
     public ArrayList<User> selectByCondition(String condition) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    public String login(String email, String password) {
+        
+        String result = "";
+        try {
+            
+            Connection con = JDBCUtil.getConnection();
+            
+            String sql = "SELECT * FROM user WHERE email = ? AND password = ?";
+            
+            PreparedStatement pst = con.prepareStatement(sql);
+            
+            pst.setString(1, email);
+            pst.setString(2, Util.encryptPassword(password)); //mã hóa mật khẩu để so sánh với mật khẩu có trong db
+            
+            ResultSet rs = pst.executeQuery();
+            
+            if (rs.next()) {
+                if (rs.getString("email").equals(email) && rs.getString("password").equals(Util.encryptPassword(password))) {
+                    result = rs.getString("UserId");
+                }
+            }
+            
+        } catch(SQLException e) {
+            result = ""; 
+        }
+        return result;
+        
     }
     
 }
