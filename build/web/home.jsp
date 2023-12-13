@@ -24,9 +24,13 @@
                 color: white;
                 padding: 10px;
                 display: flex;
+                position: fixed;
+                width: 100%;
                 justify-content: space-between;
                 align-items: center;
                 box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                z-index: 100; 
+                
             }
 
             .logo {
@@ -74,14 +78,19 @@
 
             main {
                 display: flex;
-                justify-content: space-between;
+                flex-direction: column;
                 align-items: center;
                 padding: 20px;
                 height: 100vh; /* Để main chiếm toàn bộ chiều cao của trang */
+                position: relative;
+                top: 70px;
             }
 
             #postsContainer {
                 width: 60%;
+                position: relative;
+                display: flex;
+                flex-direction: column;
             }
 
             .post {
@@ -142,6 +151,7 @@
                 align-items: center;
                 justify-content: center;
                 border: none; /* Thêm dòng này để loại bỏ đường viền */
+                margin-right: 20px;
             }
 
             .dropbtn img {
@@ -167,6 +177,7 @@
                 min-width: 160px;
                 box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
                 z-index: 1;
+                left: -200%;
             }
 
             .dropdown-content a {
@@ -187,7 +198,7 @@
     </head>
     <body>
 
-        <header>
+        <header class="navbar">
             <div class="logo" onclick="refreshPage()">MagicBook</div>
             <div class="search-bar">
                 <input type="text" placeholder="Search...">
@@ -195,12 +206,18 @@
 
             <div class="nav-buttons">
                 <button onclick="refreshPage()"><img src="DefaultImg\home-icon.png" width="20px" height="20px" alt="Home"></button>
-                <button onclick="openMessages()"><img src="DefaultImg\message-icon.png" width="20px" height="20px" alt="Messages"></button>
+                <button onclick="openMessages()">
+                    <a href="https://www.facebook.com/">
+                        <img src="DefaultImg\message-icon.png" width="20px" height="20px" alt="Messages">
+                    </a>
+                </button>
                 <button onclick="openNotifications()"><img src="DefaultImg\notification-icon.png" width="20px" height="20px" alt="Notifications"></button>
             </div>
 
-            <div class="dropdown">
-                <button onclick="myFunction()" class="dropbtn"><img src="DefaultImg\avatar-icon.png" width="20px" height="20px" alt="Avatar"></button>
+            <div class="dropdown" >
+                <button   class="dropbtn" onclick="myFunction()">
+                    <img class="dropimg" src="DefaultImg\avatar-icon.png" width="20px" height="20px" alt="Avatar">
+                </button>
                 <div id="myDropdown" class="dropdown-content">
                     <a href="profile?id="><img src="DefaultImg\avatar-icon.png" width="20px" height="20px"> UserName</a>
                     <a href="#">Settings</a>
@@ -210,6 +227,11 @@
         </header>
 
         <main>
+            <div class="post-form">
+                <textarea id="postContent" placeholder="What's on your mind?" rows="4"></textarea>
+                <input type="file" id="fileInput" accept="image/*, video/*">
+                <button onclick="submitPost()">Post</button>
+            </div>
             <div id="postsContainer">
                 <h2>Recent Posts</h2>
                 <div class="post">
@@ -218,15 +240,8 @@
                 </div>
                 <!-- Additional posts go here -->
             </div>
-            <div class="post-form">
-                <textarea id="postContent" placeholder="What's on your mind?" rows="4"></textarea>
-                <input type="file" id="fileInput" accept="image/*, video/*">
-                <button onclick="submitPost()">Post</button>
-            </div>
-            <div class="side-buttons">
-                <button onclick="openMessages()">Messages</button>
-                <button onclick="openNotifications()">Notifications</button>
-            </div>
+            
+            
         </main>
 
         <script>
@@ -236,8 +251,9 @@
                     const postContainer = document.getElementById('postsContainer');
                     const newPost = document.createElement('div');
                     newPost.className = 'post';
-                    newPost.innerHTML = `<h3>User Name</h3><p>${postContent}</p>`;
-                    postContainer.prepend(newPost);
+                    newPost.innerHTML = "<h3>User Name</h3><p>"+postContent+"</p>";
+                    console.log(newPost)
+                    postContainer.append(newPost);
                     document.getElementById('postContent').value = '';
                 }
             }
@@ -262,7 +278,7 @@
 
             // Close the dropdown menu if the user clicks outside of it
             window.onclick = function (event) {
-                if (!event.target.matches('.dropbtn')) {
+                if (!event.target.matches('.dropbtn') && !event.target.matches('.dropimg')) {
                     var dropdowns = document.getElementsByClassName("dropdown-content");
                     var i;
                     for (i = 0; i < dropdowns.length; i++) {
