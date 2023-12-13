@@ -31,4 +31,13 @@
         <url-pattern>/sign-up</url-pattern>
     </servlet-mapping>
     
+    <servlet>
+        <servlet-name>HomeController</servlet-name>
+        <servlet-class>com.controllers.HomeController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>HomeController</servlet-name>
+        <url-pattern>/home</url-pattern>
+    </servlet-mapping>
+    
 </web-app>
