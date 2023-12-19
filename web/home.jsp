@@ -225,7 +225,7 @@
                 </button>
                 <div id="myDropdown" class="dropdown-content">
                     <a href="profile?id=${userId}"><img src="${avatar}" width="20px" height="20px"> ${userName}</a>
-                    <a href="#">Settings</a>
+                    <a href="update-profile">Update profile</a>
                     <a href="logout">Log out</a>
                 </div>
             </div>

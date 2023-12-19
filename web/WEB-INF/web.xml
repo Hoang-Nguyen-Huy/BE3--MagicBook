@@ -58,4 +58,13 @@
         <url-pattern>/profile</url-pattern>
     </servlet-mapping>
     
+    <servlet>
+        <servlet-name>UpdateProfileController</servlet-name>
+        <servlet-class>com.controllers.UpdateProfileController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UpdateProfileController</servlet-name>
+        <url-pattern>/update-profile</url-pattern>
+    </servlet-mapping>
+    
 </web-app>

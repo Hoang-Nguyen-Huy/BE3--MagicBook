@@ -67,8 +67,55 @@ public class UserDAO implements I_DAO<User> {
     }
 
     @Override
-    public int update(User t) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public int update(User user) {
+        return 0;
+    }
+    
+    public int updateProfile(User user, boolean upPassword) {
+        
+        int result = 0;
+        try {
+            Connection con = JDBCUtil.getConnection();
+            
+            String sql = "UPDATE user"
+                    + " SET "
+                    + "firstName = ?"
+                    + ", lastName = ?"
+                    + ", dob = ?"
+                    + ", sex = ?"
+                    + ", country = ?"
+                    + ", phone = ?"
+                    + ", email = ?"
+                    + ", password = ?"
+                    + ", avatar = ?"
+                    + " WHERE UserId = ?";
+            
+            PreparedStatement pst = con.prepareStatement(sql);
+            
+            
+            pst.setString(1, user.getFirstName());
+            pst.setString(2, user.getLastName());
+            pst.setDate(3, user.getDob());
+            pst.setString(4, user.getSex());
+            pst.setString(5, user.getCountry());
+            pst.setString(6, user.getPhone());
+            pst.setString(7, user.getEmail());
+            if (upPassword == true) { 
+                pst.setString(8, Util.encryptPassword(user.getPassword()));
+            } else {
+                pst.setString(8,user.getPassword());
+            }
+            pst.setString(9, user.getAvatar());
+            pst.setString(10, user.getUserId());
+            
+            result = pst.executeUpdate();
+            
+            JDBCUtil.closeConnection(con);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+        
     }
 
     @Override

@@ -231,7 +231,7 @@
             </button>
             <div id="myDropdown" class="dropdown-content">
                 <a href="profile?id=${userId}"><img src="${avatar}" width="20px" height="20px"> ${userName}</a>
-                <a href="#">Settings</a>
+                <a href="update-profile">Update profile</a>
                 <a href="logout">Log out</a>
             </div>
         </div>
@@ -246,7 +246,7 @@
                 <p>Location: ${country}</p>
             </div>
         </div>
-
+    
         <div class="post-form">
             <textarea id="postContent" placeholder="What's on your mind?" rows="4"></textarea>
             <input type="file" id="fileInput" accept="image/*, video/*">
@@ -264,18 +264,18 @@
     </main>
 
     <script>
-            function submitPost() {
-                const postContent = document.getElementById('postContent').value;
-                if (postContent.trim() !== '') {
-                    const postContainer = document.getElementById('postsContainer');
-                    const newPost = document.createElement('div');
-                    newPost.className = 'post';
-                    newPost.innerHTML = "<h3>User Name</h3><p>"+postContent+"</p>";
-                    console.log(newPost)
-                    postContainer.append(newPost);
-                    document.getElementById('postContent').value = '';
-                }
+        function submitPost() {
+            const postContent = document.getElementById('postContent').value;
+            if (postContent.trim() !== '') {
+                const postContainer = document.getElementById('postsContainer');
+                const newPost = document.createElement('div');
+                newPost.className = 'post';
+                newPost.innerHTML = "<h3>User Name</h3><p>"+postContent+"</p>";
+                console.log(newPost)
+                postContainer.append(newPost);
+                document.getElementById('postContent').value = '';
             }
+        }
 
 
         function openMessages() {
