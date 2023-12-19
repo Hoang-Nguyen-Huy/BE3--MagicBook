@@ -32,7 +32,7 @@ public class LoginController extends HttpServlet{
         String password = req.getParameter("password");
         String userId = UserDAO.getInstance().login(email, password);
         if (!userId.equals("")) {
-            // lấy id là cookie.name, còn userId là cookie.value
+            // lấy id là cookie.name, còn userId là cookie.value va userId da duoc encrypt roi moi duoc set thanh value cua cookie
             Cookie cookie = new Cookie("id", Util.encryptPassword(userId)); 
             resp.addCookie(cookie);
             resp.sendRedirect("home");

@@ -205,7 +205,12 @@
             </div>
 
             <div class="nav-buttons">
-                <button onclick="refreshPage()"><img src="DefaultImg\home-icon.png" width="20px" height="20px" alt="Home"></button>
+                <button onclick="refreshPage()">
+                    <a href="home">
+                        <img src="DefaultImg\home-icon.png" width="20px" height="20px" alt="Home">
+                    </a>
+                </button>
+                
                 <button onclick="openMessages()">
                     <a href="https://www.facebook.com/">
                         <img src="DefaultImg\message-icon.png" width="20px" height="20px" alt="Messages">
@@ -216,10 +221,10 @@
 
             <div class="dropdown" >
                 <button   class="dropbtn" onclick="myFunction()">
-                    <img class="dropimg" src="DefaultImg\avatar-icon.png" width="20px" height="20px" alt="Avatar">
+                    <img class="dropimg" src="${avatar}" width="20px" height="20px" alt="Avatar">
                 </button>
                 <div id="myDropdown" class="dropdown-content">
-                    <a href="profile?id="><img src="DefaultImg\avatar-icon.png" width="20px" height="20px"> UserName</a>
+                    <a href="profile?id=${userId}"><img src="${avatar}" width="20px" height="20px"> ${userName}</a>
                     <a href="#">Settings</a>
                     <a href="logout">Log out</a>
                 </div>

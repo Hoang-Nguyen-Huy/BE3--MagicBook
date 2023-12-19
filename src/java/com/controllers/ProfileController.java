@@ -16,9 +16,9 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  *
- * @author Dell Latitude 7490
+ * @author Nguyen Huy Hoang
  */
-public class HomeController extends HttpServlet{
+public class ProfileController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -27,7 +27,7 @@ public class HomeController extends HttpServlet{
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        
+
         User user = null;
         String id = "";
         Cookie[] cookies = req.getCookies();
@@ -42,14 +42,16 @@ public class HomeController extends HttpServlet{
             req.setAttribute("userId", id);
             String name = user.getFirstName() + " " + user.getLastName();
             req.setAttribute("userName", name);
+            String country = user.getCountry();
+            req.setAttribute("country", country);
+            String sex = user.getSex();
+            req.setAttribute("gender", sex);
             req.setAttribute("avatar", user.getAvatar());
-            req.getRequestDispatcher("home.jsp").forward(req, resp);
+            req.getRequestDispatcher("profile.jsp").forward(req, resp);
         } else {
             resp.sendRedirect(req.getContextPath());
         }
-            
+        
     }
-    
-    
-    
+
 }

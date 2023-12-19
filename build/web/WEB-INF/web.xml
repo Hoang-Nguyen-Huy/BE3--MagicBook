@@ -49,4 +49,13 @@
         <url-pattern>/logout</url-pattern>
     </servlet-mapping>
     
+    <servlet>
+        <servlet-name>ProfileController</servlet-name>
+        <servlet-class>com.controllers.ProfileController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ProfileController</servlet-name>
+        <url-pattern>/profile</url-pattern>
+    </servlet-mapping>
+    
 </web-app>

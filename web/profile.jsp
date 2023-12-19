@@ -1,26 +1,26 @@
 <%-- 
-    Document   : home
-    Created on : Dec 12, 2023, 11:34:19 AM
+    Document   : profile
+    Created on : Dec 18, 2023, 1:46:10 PM
     Author     : Dell Latitude 7490
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Simple Social Network</title>
-        <style>
-            body {
-                font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-                margin: 0;
-                padding: 0;
-                background-color: #f0f2f5;
-            }
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
 
-            header {
-                background-color: #4267b2;
+        header {
+            background-color: #4267b2;
                 color: white;
                 padding: 10px;
                 display: flex;
@@ -30,22 +30,26 @@
                 align-items: center;
                 box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
                 z-index: 100; 
-                
-            }
+        }
 
-            .logo {
-                font-size: 28px;
-                font-weight: bold;
-            }
-
-            .nav-buttons,
-            .search-bar,
-            .post-form {
+        main {  
                 display: flex;
+                flex-direction: column;
                 align-items: center;
+                padding: 20px;
+                height: 100vh; /* Để main chiếm toàn bộ chiều cao của trang */
+                position: relative;
+                top: 70px;
             }
 
-            nav button,
+        .nav-buttons,
+        .search-bar,
+        .post-form {
+            display: flex;
+            align-items: center;
+        }
+
+        nav button,
             .post-form button {
                 background-color: #4267b2;
                 color: white;
@@ -55,9 +59,9 @@
                 cursor: pointer;
                 margin-right: 10px;
                 transition: background-color 0.3s ease;
-            }
+        }
 
-            nav button:hover,
+        nav button:hover,
             .post-form button:hover {
                 background-color: #345291;
             }
@@ -76,17 +80,24 @@
                 border-color: #4267b2;
             }
 
-            main {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                padding: 20px;
-                height: 100vh; /* Để main chiếm toàn bộ chiều cao của trang */
-                position: relative;
-                top: 70px;
-            }
+        .profile {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
 
-            #postsContainer {
+        .profile img {
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .profile-info {
+            max-width: 400px;
+        }
+
+        #postsContainer {
                 width: 60%;
                 position: relative;
                 display: flex;
@@ -134,10 +145,6 @@
                 width: 20px; /* Kích thước mong muốn cho ảnh */
                 height: 20px; /* Kích thước mong muốn cho ảnh */
                 margin-right: 8px;
-            }
-
-            .user-menu {
-                position: relative;
             }
 
             .dropbtn {
@@ -194,62 +201,69 @@
             .show {
                 display: block;
             }
-        </style>
-    </head>
-    <body>
+    </style>
+</head>
+<body>
 
-        <header class="navbar">
-            <div class="logo" onclick="refreshPage()">MagicBook</div>
-            <div class="search-bar">
-                <input type="text" placeholder="Search...">
-            </div>
+    <header class="navbar">
+        <div class="logo" onclick="refreshPage()">MagicBook</div>
+        <div class="search-bar">
+            <input type="text" placeholder="Search...">
+        </div>
 
-            <div class="nav-buttons">
-                <button onclick="refreshPage()">
-                    <a href="home">
-                        <img src="DefaultImg\home-icon.png" width="20px" height="20px" alt="Home">
-                    </a>
-                </button>
-                
-                <button onclick="openMessages()">
-                    <a href="https://www.facebook.com/">
-                        <img src="DefaultImg\message-icon.png" width="20px" height="20px" alt="Messages">
-                    </a>
-                </button>
-                <button onclick="openNotifications()"><img src="DefaultImg\notification-icon.png" width="20px" height="20px" alt="Notifications"></button>
-            </div>
+        <div class="nav-buttons">
+            <button onclick="refreshPage()">
+                <a href="home">
+                    <img src="DefaultImg\home-icon.png" width="20px" height="20px" alt="Home">
+                </a>
+            </button>
+            <button onclick="openMessages()">
+                <a href="https://www.facebook.com/">
+                    <img src="DefaultImg\message-icon.png" width="20px" height="20px" alt="Messages">
+                </a>
+            </button>
+            <button onclick="openNotifications()"><img src="DefaultImg\notification-icon.png" width="20px" height="20px" alt="Notifications"></button>
+        </div>
 
-            <div class="dropdown" >
-                <button   class="dropbtn" onclick="myFunction()">
-                    <img class="dropimg" src="${avatar}" width="20px" height="20px" alt="Avatar">
-                </button>
-                <div id="myDropdown" class="dropdown-content">
-                    <a href="profile?id=${userId}"><img src="${avatar}" width="20px" height="20px"> ${userName}</a>
-                    <a href="#">Settings</a>
-                    <a href="logout">Log out</a>
-                </div>
+        <div class="dropdown" >
+            <button   class="dropbtn" onclick="myFunction()">
+                <img class="dropimg" src="DefaultImg\avatar-icon.png" width="20px" height="20px" alt="Avatar">
+            </button>
+            <div id="myDropdown" class="dropdown-content">
+                <a href="profile?id=${userId}"><img src="${avatar}" width="20px" height="20px"> ${userName}</a>
+                <a href="#">Settings</a>
+                <a href="logout">Log out</a>
             </div>
-        </header>
+        </div>
+    </header>
 
-        <main>
-            <div class="post-form">
-                <textarea id="postContent" placeholder="What's on your mind?" rows="4"></textarea>
-                <input type="file" id="fileInput" accept="image/*, video/*">
-                <button onclick="submitPost()">Post</button>
+    <main>
+        <div class="profile">
+            <img src="${avatar}" alt="Profile Picture">
+            <div class="profile-info">
+                <h2>${userName}</h2>
+                <p>Gender: ${gender}</p>
+                <p>Location: ${country}</p>
             </div>
-            <div id="postsContainer">
-                <h2>Recent Posts</h2>
-                <div class="post">
-                    <h3>User Name</h3>
-                    <p>This is a sample post. Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>
-                </div>
-                <!-- Additional posts go here -->
-            </div>
-            
-            
-        </main>
+        </div>
 
-        <script>
+        <div class="post-form">
+            <textarea id="postContent" placeholder="What's on your mind?" rows="4"></textarea>
+            <input type="file" id="fileInput" accept="image/*, video/*">
+            <button onclick="submitPost()">Post</button>
+        </div>
+
+        <div id="postsContainer">
+            <h2>Recent Posts</h2>
+            <div class="post">
+                <h3>User Name</h3>
+                <p>This is a sample post....</p>
+            <div>
+            <!-- Additional posts go here -->
+        </div>
+    </main>
+
+    <script>
             function submitPost() {
                 const postContent = document.getElementById('postContent').value;
                 if (postContent.trim() !== '') {
@@ -263,38 +277,39 @@
                 }
             }
 
-            function openMessages() {
-                alert("Redirect to Messages Page");
-            }
 
-            function openNotifications() {
-                alert("Redirect to Notifications Page");
-            }
+        function openMessages() {
+            alert("Redirect to Messages Page");
+        }
 
-            function refreshPage() {
-                location.reload();
-            }
+        function openNotifications() {
+            alert("Redirect to Notifications Page");
+        }
 
-            /* When the user clicks on the button,
-             toggle between hiding and showing the dropdown content */
-            function myFunction() {
-                document.getElementById("myDropdown").classList.toggle("show");
-            }
+        function refreshPage() {
+            location.reload();
+        }
 
-            // Close the dropdown menu if the user clicks outside of it
-            window.onclick = function (event) {
-                if (!event.target.matches('.dropbtn') && !event.target.matches('.dropimg')) {
-                    var dropdowns = document.getElementsByClassName("dropdown-content");
-                    var i;
-                    for (i = 0; i < dropdowns.length; i++) {
-                        var openDropdown = dropdowns[i];
-                        if (openDropdown.classList.contains('show')) {
-                            openDropdown.classList.remove('show');
-                        }
+        /* When the user clicks on the button,
+         toggle between hiding and showing the dropdown content */
+        function myFunction() {
+            document.getElementById("myDropdown").classList.toggle("show");
+        }
+
+        // Close the dropdown menu if the user clicks outside of it
+        window.onclick = function (event) {
+            if (!event.target.matches('.dropbtn') && !event.target.matches('.dropimg')) {
+                var dropdowns = document.getElementsByClassName("dropdown-content");
+                var i;
+                for (i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
                     }
                 }
             }
-        </script>
+        }
+    </script>
 
-    </body>
+</body>
 </html>
