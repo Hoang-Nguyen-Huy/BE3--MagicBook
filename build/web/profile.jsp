@@ -227,7 +227,7 @@
 
         <div class="dropdown" >
             <button   class="dropbtn" onclick="myFunction()">
-                <img class="dropimg" src="DefaultImg\avatar-icon.png" width="20px" height="20px" alt="Avatar">
+                <img class="dropimg" src="${avatar}" width="20px" height="20px" alt="Avatar">
             </button>
             <div id="myDropdown" class="dropdown-content">
                 <a href="profile?id=${userId}"><img src="${avatar}" width="20px" height="20px"> ${userName}</a>

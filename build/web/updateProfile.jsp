@@ -53,7 +53,7 @@
             <c:if test="${requestScope.error != null}">
                 <p style="color: red;">${requestScope.error}</p>
             </c:if>
-            <form method="post">
+            <form method="post" enctype="multipart/form-data">
                 <label for="email">Email:</label>
                 <input type="email" id="email" name="email">
                 <br>
@@ -80,6 +80,10 @@
                 <br>
                 <label for="country">Country:</label>
                 <input type="text" id="country" name="country">
+                <br>
+                <br>
+                <label for="avatar">Avatar:</label>
+                <input type="file" id="avatar" name="avatar" accept="image/*">
                 <br>
                 <button type="submit">Update</button>
             </form>
