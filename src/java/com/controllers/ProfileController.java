@@ -7,7 +7,9 @@ package com.controllers;
 
 import com.model.dao.UserDAO;
 import com.model.dm.User;
+import com.utils.Util;
 import java.io.IOException;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
@@ -28,6 +30,7 @@ public class ProfileController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
+        String userId = req.getParameter("id");
         User user = null;
         String id = "";
         Cookie[] cookies = req.getCookies();
@@ -39,19 +42,50 @@ public class ProfileController extends HttpServlet {
             }
         }
         if (user != null) {
-            req.setAttribute("userId", id);
-            String name = user.getFirstName() + " " + user.getLastName();
-            req.setAttribute("userName", name);
-            String country = user.getCountry();
-            req.setAttribute("country", country);
-            String sex = user.getSex();
-            req.setAttribute("gender", sex);
-            req.setAttribute("avatar", user.getAvatar());
-            req.getRequestDispatcher("profile.jsp").forward(req, resp);
-        } else {
-            resp.sendRedirect(req.getContextPath());
+            String accountName = user.getFirstName() + " " + user.getLastName();
+            req.setAttribute("accountName", accountName);
+            req.setAttribute("accountAvatar", user.getAvatar());
+            req.setAttribute("accountId", id);
+
         }
-        
+
+        if (userId == null || userId.equals(id)) {
+            if (user != null) {
+                // khi account = true co nghia la profile cua nguoi dung dang log in
+                req.setAttribute("account", true);
+                
+                req.setAttribute("userId", id);
+                String name = user.getFirstName() + " " + user.getLastName();
+                req.setAttribute("userName", name);
+                String country = user.getCountry();
+                req.setAttribute("country", country);
+                String sex = user.getSex();
+                req.setAttribute("gender", sex);
+                req.setAttribute("avatar", user.getAvatar());
+                req.getRequestDispatcher("profile.jsp").forward(req, resp);
+            } else {
+                resp.sendRedirect(req.getContextPath());
+            }
+        } else if (!userId.equals(id) || id.equals("")) {
+            // Khi account = false la profile cua nguoi khac, khong phai cua nguoi dang log in
+            req.setAttribute("account", false);
+            
+            ArrayList<User> list = UserDAO.getInstance().selectAll();
+            for (User u : list) {
+                if (Util.encryptPassword(u.getUserId()).equals(userId)) {
+                    req.setAttribute("userId", userId);
+                    String name = u.getFirstName() + " " + u.getLastName();
+                    req.setAttribute("userName", name);
+                    String country = u.getCountry();
+                    req.setAttribute("country", country);
+                    String sex = u.getSex();
+                    req.setAttribute("gender", sex);
+                    req.setAttribute("avatar", u.getAvatar());
+                    req.getRequestDispatcher("profile.jsp").forward(req, resp);
+                }
+            }
+        }
+
     }
 
 }

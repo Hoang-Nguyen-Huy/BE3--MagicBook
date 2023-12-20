@@ -70,13 +70,13 @@ public class UserDAO implements I_DAO<User> {
     public int update(User user) {
         return 0;
     }
-    
+
     public int updateProfile(User user, boolean upPassword) {
-        
+
         int result = 0;
         try {
             Connection con = JDBCUtil.getConnection();
-            
+
             String sql = "UPDATE user"
                     + " SET "
                     + "firstName = ?"
@@ -89,10 +89,9 @@ public class UserDAO implements I_DAO<User> {
                     + ", password = ?"
                     + ", avatar = ?"
                     + " WHERE UserId = ?";
-            
+
             PreparedStatement pst = con.prepareStatement(sql);
-            
-            
+
             pst.setString(1, user.getFirstName());
             pst.setString(2, user.getLastName());
             pst.setDate(3, user.getDob());
@@ -100,22 +99,22 @@ public class UserDAO implements I_DAO<User> {
             pst.setString(5, user.getCountry());
             pst.setString(6, user.getPhone());
             pst.setString(7, user.getEmail());
-            if (upPassword == true) { 
+            if (upPassword == true) {
                 pst.setString(8, Util.encryptPassword(user.getPassword()));
             } else {
-                pst.setString(8,user.getPassword());
+                pst.setString(8, user.getPassword());
             }
             pst.setString(9, user.getAvatar());
             pst.setString(10, user.getUserId());
-            
+
             result = pst.executeUpdate();
-            
+
             JDBCUtil.closeConnection(con);
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return result;
-        
+
     }
 
     @Override
@@ -203,7 +202,46 @@ public class UserDAO implements I_DAO<User> {
 
     @Override
     public ArrayList<User> selectByCondition(String condition) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
+        ArrayList<User> res = new ArrayList<>();
+        try {
+            Connection con = JDBCUtil.getConnection();
+
+            String sql = "SELECT * FROM user"
+                    + " WHERE (firstName LIKE ? OR lastName LIKE ?)"
+                    + " OR CONCAT(firstName, ' ', lastName) LIKE ?";
+
+            PreparedStatement pst = con.prepareStatement(sql);
+
+            pst.setString(1, "%" + condition.trim() + "%");
+            pst.setString(2, "%" + condition.trim() + "%");
+            pst.setString(3, condition.trim());
+
+            ResultSet rs = pst.executeQuery();
+
+            while (rs.next()) {
+                String userId = rs.getString("UserId");
+                String firstName = rs.getString("firstName");
+                String lastName = rs.getString("lastName");
+                Date dob = rs.getDate("dob");
+                String sex = rs.getString("sex");
+                String country = rs.getString("country");
+                String phone = rs.getString("phone");
+                String email = rs.getString("email");
+                String password = rs.getString("password");
+                String avatar = rs.getString("avatar");
+
+                User user = new User(userId, firstName, lastName, dob, sex, country, phone, email, password, avatar);
+
+                res.add(user);
+            }
+
+            JDBCUtil.closeConnection(con);
+        } catch (Exception e) {
+
+        }
+        return res;
+
     }
 
     public String login(String email, String password) {

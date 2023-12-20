@@ -1,16 +1,17 @@
 <%-- 
-    Document   : home
-    Created on : Dec 12, 2023, 11:34:19 AM
+    Document   : searchPeople
+    Created on : Dec 20, 2023, 1:05:58 PM
     Author     : Dell Latitude 7490
 --%>
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html lang="en">
+<html>
     <head>
-        <meta charset="UTF-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>MagicBook</title>
+        <title>Simple Social Network</title>
         <style>
             body {
                 font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
@@ -93,28 +94,52 @@
                 flex-direction: column;
             }
 
-            .post {
+            .user {
+                width: 50%;
                 background-color: white;
                 padding: 20px;
                 margin-bottom: 20px;
                 border-radius: 8px;
                 box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            }
-
-            .post-form {
-                width: 30%;
                 display: flex;
-                flex-direction: column;
-                align-items: flex-start;
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
             }
 
-            .post-form textarea {
-                width: 100%;
+            .user img {
+                width: 70px;
+                height: 80px;
+                border-radius: 50%;
+                object-fit: cover;
                 margin-bottom: 10px;
             }
 
-            .post-form button {
-                align-self: flex-end;
+            .user a {
+                font-size: 16px;
+                font-weight: bold;
+                color: #4267b2;
+                text-decoration: none;
+                margin-bottom: 5px;
+            }
+
+            .user p {
+                font-size: 14px;
+                color: #666;
+            }
+
+            .user button {
+                background-color: #4267b2;
+                color: white;
+                padding: 8px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+            }
+
+            .user button:hover {
+                background-color: #345291;
             }
 
             .side-buttons {
@@ -197,7 +222,7 @@
         </style>
     </head>
     <body>
-
+        
         <header class="navbar">
             <div class="logo" onclick="refreshPage()">MagicBook</div>
             <div class="search-bar">
@@ -235,37 +260,38 @@
         </header>
 
         <main>
-            <div class="post-form">
-                <textarea id="postContent" placeholder="What's on your mind?" rows="4"></textarea>
-                <input type="file" id="fileInput" accept="image/*, video/*">
-                <button onclick="submitPost()">Post</button>
-            </div>
-            <div id="postsContainer">
-                <h2>Recent Posts</h2>
-                <div class="post">
-                    <h3>User Name</h3>
-                    <p>This is a sample post. Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>
-                </div>
-                <!-- Additional posts go here -->
-            </div>
             
+            <c:forEach var="foundUser" items="${found}">
+                <div class="user">
+                    <img src="${foundUser.avatar}" width="70" heigth="80" alt="Avatar">
+                    <a href="profile?id=${foundUser.userId}"><c:out value="${foundUser.firstName} ${foundUser.lastName}"/></a>
+                    <p>${foundUser.country}</p>
+                    <button class="addFriendButton" style="background-color: #4267b2; color: white;" onclick="toggleFriendRequest(this)">Add Friend</button>
+                </div>
+            </c:forEach>
             
         </main>
 
         <script>
-            function submitPost() {
-                const postContent = document.getElementById('postContent').value;
-                if (postContent.trim() !== '') {
-                    const postContainer = document.getElementById('postsContainer');
-                    const newPost = document.createElement('div');
-                    newPost.className = 'post';
-                    newPost.innerHTML = "<h3>User Name</h3><p>"+postContent+"</p>";
-                    console.log(newPost)
-                    postContainer.append(newPost);
-                    document.getElementById('postContent').value = '';
-                }
-            }
+            let friendRequestSent = false; // Giá trị mặc định: không có yêu cầu bạn bè
+            let addButton = document.getElementById('addFriendButton');
 
+            function toggleFriendRequest(button) {
+                let friendRequestSent = button.classList.contains('friend-request-sent');
+
+                if (friendRequestSent) {
+                    // Nếu yêu cầu bạn bè đã được gửi, thay đổi thành "Add Friend"
+                    button.innerText = 'Add Friend';
+                    button.style.backgroundColor = '#4267b2';
+                } else {
+                    // Nếu không có yêu cầu bạn bè, thay đổi thành "Cancel Request"
+                    button.innerText = 'Cancel Request';
+                    button.style.backgroundColor = 'red'; // Màu bạn chọn cho trạng thái yêu cầu đã gửi
+                }
+
+                // Cập nhật trạng thái yêu cầu bạn bè
+                button.classList.toggle('friend-request-sent');
+            }
             function openMessages() {
                 alert("Redirect to Messages Page");
             }
@@ -298,6 +324,6 @@
                 }
             }
         </script>
-
+        
     </body>
 </html>

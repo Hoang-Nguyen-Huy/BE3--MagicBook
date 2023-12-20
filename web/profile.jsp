@@ -4,6 +4,7 @@
     Author     : Dell Latitude 7490
 --%>
 
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -208,7 +209,10 @@
     <header class="navbar">
         <div class="logo" onclick="refreshPage()">MagicBook</div>
         <div class="search-bar">
-            <input type="text" placeholder="Search...">
+            <form action="search" method="get">
+                <input type="text" name="u" placeholder="Search...">
+                <input type="submit" value="Search">
+            </form>
         </div>
 
         <div class="nav-buttons">
@@ -227,10 +231,10 @@
 
         <div class="dropdown" >
             <button   class="dropbtn" onclick="myFunction()">
-                <img class="dropimg" src="${avatar}" width="20px" height="20px" alt="Avatar">
+                <img class="dropimg" src="${accountAvatar}" width="20px" height="20px" alt="Avatar">
             </button>
             <div id="myDropdown" class="dropdown-content">
-                <a href="profile?id=${userId}"><img src="${avatar}" width="20px" height="20px"> ${userName}</a>
+                <a href="profile?id=${accountId}"><img src="${accountAvatar}" width="20px" height="20px"> ${accountName}</a>
                 <a href="update-profile">Update profile</a>
                 <a href="logout">Log out</a>
             </div>
@@ -246,13 +250,20 @@
                 <p>Location: ${country}</p>
             </div>
         </div>
-    
-        <div class="post-form">
-            <textarea id="postContent" placeholder="What's on your mind?" rows="4"></textarea>
-            <input type="file" id="fileInput" accept="image/*, video/*">
-            <button onclick="submitPost()">Post</button>
-        </div>
-
+          
+        <c:choose>
+            <c:when test="${account}">
+                <div class="post-form">
+                    <textarea id="postContent" placeholder="What's on your mind?" rows="4"></textarea>
+                    <input type="file" id="fileInput" accept="image/*, video/*">
+                    <button onclick="submitPost()">Post</button>
+                </div>
+            </c:when>
+            <c:otherwise>
+                <button id="addFriendButton" style="background-color: #4267b2; color: white;" onclick="toggleFriendRequest()">Add Friend</button>
+            </c:otherwise>
+        </c:choose>
+       
         <div id="postsContainer">
             <h2>Recent Posts</h2>
             <div class="post">
@@ -264,6 +275,23 @@
     </main>
 
     <script>
+        let friendRequestSent = false; // Giá trị mặc định: không có yêu cầu bạn bè
+        let addButton = document.getElementById('addFriendButton');
+
+        function toggleFriendRequest() {
+            if (friendRequestSent) {
+                // Nếu yêu cầu bạn bè đã được gửi, thay đổi thành "Add Friend"
+                addButton.innerText = 'Add Friend';
+                addButton.style.backgroundColor = '#4267b2';
+            } else {
+                // Nếu không có yêu cầu bạn bè, thay đổi thành "Cancel Request"
+                addButton.innerText = 'Cancel Request';
+                addButton.style.backgroundColor = 'red'; // Màu bạn chọn cho trạng thái yêu cầu đã gửi
+            }
+
+            // Cập nhật trạng thái yêu cầu bạn bè
+            friendRequestSent = !friendRequestSent;
+        }
         function submitPost() {
             const postContent = document.getElementById('postContent').value;
             if (postContent.trim() !== '') {

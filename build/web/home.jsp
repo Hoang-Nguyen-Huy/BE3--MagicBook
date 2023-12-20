@@ -10,7 +10,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Simple Social Network</title>
+        <title>MagicBook</title>
         <style>
             body {
                 font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
@@ -201,7 +201,10 @@
         <header class="navbar">
             <div class="logo" onclick="refreshPage()">MagicBook</div>
             <div class="search-bar">
-                <input type="text" placeholder="Search...">
+                <form action="search" method="get">
+                    <input type="text" name="u" placeholder="Search...">
+                    <input type="submit" value="Search">
+                </form>
             </div>
 
             <div class="nav-buttons">
