@@ -24,7 +24,8 @@ public class ProfileController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPost(req, resp); //To change body of generated methods, choose Tools | Templates.
+        String action = req.getParameter("action");
+        System.out.println(action);
     }
 
     @Override

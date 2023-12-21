@@ -9,6 +9,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Profile</title>
@@ -260,7 +261,11 @@
                 </div>
             </c:when>
             <c:otherwise>
-                <button id="addFriendButton" style="background-color: #4267b2; color: white;" onclick="toggleFriendRequest()">Add Friend</button>
+                <form action="profile?id=${userId}" method="post" onsubmit="submitForm(event);">
+                    <input type="hidden" name="action" value="addFriend">
+                    <input type="hidden" id="friendRequestId" name="friendRequestId" value="">
+                    <button type="button" id="addFriendButton" style="background-color: #4267b2; color: white;" onclick="toggleFriendRequest(event)">Add Friend</button>
+                </form>
             </c:otherwise>
         </c:choose>
        
@@ -275,23 +280,80 @@
     </main>
 
     <script>
+        function submitForm(event) {
+            // Xử lý logic của bạn ở đây
+
+            // Ngăn chặn hành vi mặc định của form (chuyển hướng)
+            event.preventDefault();
+
+            // Gọi hàm submit của form
+            document.forms[1].submit();
+        }
         let friendRequestSent = false; // Giá trị mặc định: không có yêu cầu bạn bè
+        let friendRequestIdInput = document.getElementById('friendRequestId');
         let addButton = document.getElementById('addFriendButton');
 
-        function toggleFriendRequest() {
-            if (friendRequestSent) {
-                // Nếu yêu cầu bạn bè đã được gửi, thay đổi thành "Add Friend"
-                addButton.innerText = 'Add Friend';
-                addButton.style.backgroundColor = '#4267b2';
-            } else {
-                // Nếu không có yêu cầu bạn bè, thay đổi thành "Cancel Request"
-                addButton.innerText = 'Cancel Request';
-                addButton.style.backgroundColor = 'red'; // Màu bạn chọn cho trạng thái yêu cầu đã gửi
+        // Lấy giá trị từ localStorage khi trang được tải
+        document.addEventListener("DOMContentLoaded", function () {
+            let storedFriendRequestSent = localStorage.getItem('friendRequestSent');
+            let storedFriendRequestId = localStorage.getItem('friendRequestId');
+
+            if (storedFriendRequestSent && storedFriendRequestId) {
+                friendRequestSent = JSON.parse(storedFriendRequestSent);
+                friendRequestIdInput.value = storedFriendRequestId;
+
+                // Cập nhật giao diện tùy thuộc vào trạng thái lưu trữ
+                if (friendRequestSent) {
+                    addButton.innerText = 'Cancel Request';
+                    addButton.style.backgroundColor = 'red';
+                } else {
+                    addButton.innerText = 'Add Friend';
+                    addButton.style.backgroundColor = '#4267b2';
+                }
+            }
+        });
+
+        function toggleFriendRequest(event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            var friendRequestId = friendRequestIdInput.value;
+
+            if (!friendRequestId) {
+                friendRequestId = 'addFriend'; // Thiết lập giá trị mặc định khi không có giá trị
             }
 
-            // Cập nhật trạng thái yêu cầu bạn bè
+            $.ajax({
+                type: "POST",
+                url: "profile", // Đổi URL thành servlet hoặc controller chính xác
+                data: { action: friendRequestId, friendRequestId: friendRequestId },
+                success: function (response) {
+                    console.log(response);
+                    // Cập nhật giao diện người dùng tại đây nếu cần
+                },
+                error: function (error) {
+                    console.error("Error:", error);
+                }
+            });
+
+            if (friendRequestSent) {
+                addButton.innerText = 'Add Friend';
+                addButton.style.backgroundColor = '#4267b2';
+                friendRequestIdInput.value = 'addFriend';
+            } else {
+                addButton.innerText = 'Cancel Request';
+                addButton.style.backgroundColor = 'red';
+                friendRequestIdInput.value = 'cancelRequest';
+            }
+
             friendRequestSent = !friendRequestSent;
+
+            // Lưu trạng thái và action vào localStorage
+            localStorage.setItem('friendRequestSent', JSON.stringify(friendRequestSent));
+            localStorage.setItem('friendRequestId', friendRequestIdInput.value);
         }
+
+
         function submitPost() {
             const postContent = document.getElementById('postContent').value;
             if (postContent.trim() !== '') {

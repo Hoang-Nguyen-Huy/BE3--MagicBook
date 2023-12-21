@@ -2,6 +2,12 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/C:/Users/Dell%20Latitude%207490/Documents/NetBeansProjects/MagicBook/src/java/com/controllers/ProfileController.java</file>
+            <file>file:/C:/Users/Dell%20Latitude%207490/Documents/NetBeansProjects/MagicBook/src/java/com/model/dm/Friendship.java</file>
+            <file>file:/C:/Users/Dell%20Latitude%207490/Documents/NetBeansProjects/MagicBook/web/searchPeople.jsp</file>
+            <file>file:/C:/Users/Dell%20Latitude%207490/Documents/NetBeansProjects/MagicBook/src/java/com/controllers/SearchController.java</file>
+            <file>file:/C:/Users/Dell%20Latitude%207490/Documents/NetBeansProjects/MagicBook/web/profile.jsp</file>
+        </group>
     </open-files>
 </project-private>
