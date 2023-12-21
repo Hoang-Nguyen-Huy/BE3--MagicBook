@@ -176,6 +176,10 @@ public class UpdateProfileController extends HttpServlet {
         User user = null;
         String id = "";
         Cookie[] cookies = req.getCookies();
+        if(cookies == null) {
+            resp.sendRedirect(req.getContextPath());
+            return;
+        }
         for (Cookie cookie : cookies) {
             if (cookie.getName().equals("id")) {
                 id = cookie.getValue();
