@@ -25,6 +25,12 @@ public class Friendship {
         this.receiverId = receiverId;
     }
 
+    public Friendship(String status, String userId, String receiverId) {
+        this.status = status;
+        this.userId = userId;
+        this.receiverId = receiverId;
+    }
+            
     public String getFriendshipId() {
         return friendshipId;
     }

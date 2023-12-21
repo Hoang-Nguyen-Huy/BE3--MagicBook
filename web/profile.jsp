@@ -264,7 +264,7 @@
                 <form action="profile?id=${userId}" method="post" onsubmit="submitForm(event);">
                     <input type="hidden" name="action" value="addFriend">
                     <input type="hidden" id="friendRequestId" name="friendRequestId" value="">
-                    <button type="button" id="addFriendButton" style="background-color: #4267b2; color: white;" onclick="toggleFriendRequest(event)">Add Friend</button>
+                    <button type="button" id="addFriendButton" style="background-color: #4267b2; color: white;" onclick="toggleFriendRequest(event, '${userId}')">Add Friend</button>
                 </form>
             </c:otherwise>
         </c:choose>
@@ -313,7 +313,7 @@
             }
         });
 
-        function toggleFriendRequest(event) {
+        function toggleFriendRequest(event, userId) {
             event.preventDefault();
             event.stopPropagation();
 
@@ -326,7 +326,7 @@
             $.ajax({
                 type: "POST",
                 url: "profile", // Đổi URL thành servlet hoặc controller chính xác
-                data: { action: friendRequestId, friendRequestId: friendRequestId },
+                data: { action: friendRequestId, friendRequestId: friendRequestId, id: userId},
                 success: function (response) {
                     console.log(response);
                     // Cập nhật giao diện người dùng tại đây nếu cần

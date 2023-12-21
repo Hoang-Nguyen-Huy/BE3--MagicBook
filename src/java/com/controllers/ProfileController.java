@@ -5,7 +5,9 @@
  */
 package com.controllers;
 
+import com.model.dao.FriendshipDAO;
 import com.model.dao.UserDAO;
+import com.model.dm.Friendship;
 import com.model.dm.User;
 import com.utils.Util;
 import java.io.IOException;
@@ -24,8 +26,36 @@ public class ProfileController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        User user = null;
+        String userId = "";
+        Cookie[] cookies = req.getCookies();
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals("id")) {
+                userId = cookie.getValue();
+                user = UserDAO.getInstance().checkAccessToHome(userId);
+                break;
+            }
+        }
+
         String action = req.getParameter("action");
         System.out.println(action);
+        // id lay tu url
+        String IdReceiver = req.getParameter("id");
+        System.out.println(IdReceiver);
+
+        // de lay nguoi dung receiver tu db
+        User receiver = UserDAO.getInstance().checkAccessToHome(IdReceiver);
+
+        if ("addFriend".equals(action) && !IdReceiver.equals("") && user != null) {
+            String status = "Pending";
+            Friendship fs = new Friendship(status, user.getUserId(), receiver.getUserId());
+            FriendshipDAO.getInstance().insert(fs);
+        } else if ("cancelRequest".equals(action) && !IdReceiver.equals("") && user != null) {
+            Friendship fs = new Friendship("Pending", user.getUserId(), receiver.getUserId());
+            FriendshipDAO.getInstance().delete(fs);
+        }
+        
     }
 
     @Override
@@ -54,7 +84,7 @@ public class ProfileController extends HttpServlet {
             if (user != null) {
                 // khi account = true co nghia la profile cua nguoi dung dang log in
                 req.setAttribute("account", true);
-                
+
                 req.setAttribute("userId", id);
                 String name = user.getFirstName() + " " + user.getLastName();
                 req.setAttribute("userName", name);
@@ -70,7 +100,7 @@ public class ProfileController extends HttpServlet {
         } else if (!userId.equals(id) || id.equals("")) {
             // Khi account = false la profile cua nguoi khac, khong phai cua nguoi dang log in
             req.setAttribute("account", false);
-            
+
             ArrayList<User> list = UserDAO.getInstance().selectAll();
             for (User u : list) {
                 if (Util.encryptPassword(u.getUserId()).equals(userId)) {

@@ -17,6 +17,10 @@ import java.util.ArrayList;
  * @author Nguyen Huy Hoang
  */
 public class FriendshipDAO implements I_DAO<Friendship> {
+    
+    public static FriendshipDAO getInstance() {
+        return new FriendshipDAO();
+    }
 
     @Override
     public int insert(Friendship friendship) {
@@ -50,8 +54,33 @@ public class FriendshipDAO implements I_DAO<Friendship> {
     }
 
     @Override
-    public int delete(Friendship t) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public int delete(Friendship friendship) {
+        
+        int result = 0;
+        try {
+            
+            Connection con = JDBCUtil.getConnection();
+            
+            String sql = "DELETE FROM Friendship"
+                    + " WHERE (UserId = ? AND receiverId = ?)"
+                    + " OR (UserId = ? AND receiverId = ?)";
+            
+            PreparedStatement pst = con.prepareStatement(sql);
+            
+            pst.setString(1, friendship.getUserId());
+            pst.setString(2, friendship.getReceiverId());
+            pst.setString(3, friendship.getReceiverId());
+            pst.setString(4, friendship.getUserId());  
+            
+            result = pst.executeUpdate();
+            
+            JDBCUtil.closeConnection(con);
+            
+        } catch(Exception e) {
+            
+        }
+        return result;
+        
     }
 
     @Override
