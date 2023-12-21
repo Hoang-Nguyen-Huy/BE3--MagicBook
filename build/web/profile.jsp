@@ -262,20 +262,35 @@
             </c:when>
             <c:otherwise>
                 <c:choose>
-                    <c:when test="${friendship && !friend}">
+                    <c:when test="${friendship && !friend && send}">
                         <form action="profile?id=${userId}" method="post" onsubmit="submitForm(event);">
                             <input type="hidden" name="action" value="addFriend">
                             <input type="hidden" id="friendRequestId" name="friendRequestId" value="">
                             <button type="button" id="addFriendButton" style="background-color: red; color: white;" onclick="toggleFriendRequest(event, '${userId}', 'cancelRequest')">Cancel Request</button>
                         </form>
                     </c:when>
-                    <c:otherwise>
+                    <c:when test="${!friendship}">
                         <form action="profile?id=${userId}" method="post" onsubmit="submitForm(event);">
                             <input type="hidden" name="action" value="addFriend">
                             <input type="hidden" id="friendRequestId" name="friendRequestId" value="">
                             <button type="button" id="addFriendButton" style="background-color: #4267b2; color: white;" onclick="toggleFriendRequest(event, '${userId}', 'addFriend')">Add Friend</button>
                         </form>                                                         
-                    </c:otherwise>
+                    </c:when>
+                    <c:when test="${friend && friendship}">
+                        <form action="profile?id=${userId}" method="post" onsubmit="submitForm(event);">
+                            <input type="hidden" name="action" value="addFriend">
+                            <input type="hidden" id="friendRequestId" name="friendRequestId" value="">
+                            <button type="button" id="addFriendButton" style="background-color: #4267b2; color: white;" onclick="toggleFriendRequest(event, '${userId}', 'cancelRequest')">Friend</button>
+                        </form> 
+                    </c:when>
+                    <c:when test="${receive && friendship && !friend}">
+                        <form action="profile?id=${userId}" method="post" onsubmit="submitForm(event);">
+                            <input type="hidden" name="action" value="addFriend">
+                            <input type="hidden" id="friendRequestId" name="friendRequestId" value="">
+                            <button type="button" id="addFriendButton" style="background-color: #4267b2; color: white;" onclick="toggleFriendRequest(event, '${userId}', 'beFriend')">Accepted</button>
+                            <button type="button" id="addFriendButton" style="background-color: red; color: white;" onclick="toggleFriendRequest(event, '${userId}', 'cancelRequest')">Decline</button> 
+                        </form> 
+                    </c:when>
                 </c:choose>
             </c:otherwise>
         </c:choose>

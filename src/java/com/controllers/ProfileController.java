@@ -54,6 +54,9 @@ public class ProfileController extends HttpServlet {
         } else if ("cancelRequest".equals(action) && !IdReceiver.equals("") && user != null) {
             Friendship fs = new Friendship("Pending", user.getUserId(), receiver.getUserId());
             FriendshipDAO.getInstance().delete(fs);
+        } else if ("beFriend".equals(action) && !IdReceiver.equals("") && user != null) {
+            Friendship fs = new Friendship("Accepted", user.getUserId(), receiver.getUserId());
+            FriendshipDAO.getInstance().update(fs);
         }
 
     }
@@ -104,15 +107,23 @@ public class ProfileController extends HttpServlet {
         } else if (!userId.equals(id) || id.equals("")) {
             // Khi account = false la profile cua nguoi khac, khong phai cua nguoi dang log in
             req.setAttribute("account", false);
-            
-            User receiver = UserDAO.getInstance().checkAccessToHome(userId);
+
+            User receiver = UserDAO.getInstance().checkAccessToHome(userId); // lay thong nguoi dung tu id url
             // lan luot la id cua cookie, id tu url(receiver)
             Friendship fs = FriendshipDAO.getInstance().selectByUserReceiverId(user.getUserId(), receiver.getUserId());
             if (fs == null) {
-                req.setAttribute("friendship", false); // chua co ket ban
-            } else if (fs.getStatus().equals("Pending")) {
-                req.setAttribute("friendship", true); // da gui yeu cau ket ban
-                req.setAttribute("friend", false);  // chua chap nhan ket ban tu receiver
+                req.setAttribute("friendship", false); // 2 ben chua co ket ban --> hien nut Add friend cho ca ben GUI va NHAN
+            } else if (fs.getStatus().equals("Accepted")) {
+                req.setAttribute("friend", true); // 2 ben da thanh ban be --> hien nut Friend cho ca ben GUI va NHAN
+                req.setAttribute("friendship", true);
+            } else if (fs.getStatus().equals("Pending") && fs.getUserId().equals(user.getUserId())) { // nguoi GUI la nguoi dang login --> hien nut Cancel Request cho nguoi GUI
+                req.setAttribute("friendship", true);
+                req.setAttribute("friend", false);
+                req.setAttribute("send", true);
+            } else if (fs.getStatus().equals("Pending") && fs.getReceiverId().equals(user.getUserId())) { // nguoi NHAN la nguoi dang login --> hien 2 nut la Accept va Decline cho nguoi NHAN
+                req.setAttribute("receive", true);
+                req.setAttribute("friendship", true);
+                req.setAttribute("friend", false);
             }
 
             ArrayList<User> list = UserDAO.getInstance().selectAll();

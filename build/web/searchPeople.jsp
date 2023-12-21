@@ -95,7 +95,7 @@
             }
 
             .user {
-                width: 50%;
+                width: 40%;
                 background-color: white;
                 padding: 20px;
                 margin-bottom: 20px;
@@ -266,32 +266,12 @@
                     <img src="${foundUser.avatar}" width="70" heigth="80" alt="Avatar">
                     <a href="profile?id=${foundUser.userId}"><c:out value="${foundUser.firstName} ${foundUser.lastName}"/></a>
                     <p>${foundUser.country}</p>
-                    <button class="addFriendButton" style="background-color: #4267b2; color: white;" onclick="toggleFriendRequest(this)">Add Friend</button>
                 </div>
             </c:forEach>
             
         </main>
 
         <script>
-            let friendRequestSent = false; // Giá trị mặc định: không có yêu cầu bạn bè
-            let addButton = document.getElementById('addFriendButton');
-
-            function toggleFriendRequest(button) {
-                let friendRequestSent = button.classList.contains('friend-request-sent');
-
-                if (friendRequestSent) {
-                    // Nếu yêu cầu bạn bè đã được gửi, thay đổi thành "Add Friend"
-                    button.innerText = 'Add Friend';
-                    button.style.backgroundColor = '#4267b2';
-                } else {
-                    // Nếu không có yêu cầu bạn bè, thay đổi thành "Cancel Request"
-                    button.innerText = 'Cancel Request';
-                    button.style.backgroundColor = 'red'; // Màu bạn chọn cho trạng thái yêu cầu đã gửi
-                }
-
-                // Cập nhật trạng thái yêu cầu bạn bè
-                button.classList.toggle('friend-request-sent');
-            }
             function openMessages() {
                 alert("Redirect to Messages Page");
             }
