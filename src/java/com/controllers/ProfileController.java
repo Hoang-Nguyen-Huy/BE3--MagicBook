@@ -55,15 +55,15 @@ public class ProfileController extends HttpServlet {
             Friendship fs = new Friendship("Pending", user.getUserId(), receiver.getUserId());
             FriendshipDAO.getInstance().delete(fs);
         }
-        
+
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        String userId = req.getParameter("id");
+        String userId = req.getParameter("id"); //id tu url
         User user = null;
-        String id = "";
+        String id = "";  //id cua cookie
         Cookie[] cookies = req.getCookies();
         for (Cookie cookie : cookies) {
             if (cookie.getName().equals("id")) {
@@ -71,6 +71,10 @@ public class ProfileController extends HttpServlet {
                 user = UserDAO.getInstance().checkAccessToHome(id);
                 break;
             }
+        }
+        if (user == null) {
+            resp.sendRedirect(req.getContextPath());
+            return;
         }
         if (user != null) {
             String accountName = user.getFirstName() + " " + user.getLastName();
@@ -100,6 +104,16 @@ public class ProfileController extends HttpServlet {
         } else if (!userId.equals(id) || id.equals("")) {
             // Khi account = false la profile cua nguoi khac, khong phai cua nguoi dang log in
             req.setAttribute("account", false);
+            
+            User receiver = UserDAO.getInstance().checkAccessToHome(userId);
+            // lan luot la id cua cookie, id tu url(receiver)
+            Friendship fs = FriendshipDAO.getInstance().selectByUserReceiverId(user.getUserId(), receiver.getUserId());
+            if (fs == null) {
+                req.setAttribute("friendship", false); // chua co ket ban
+            } else if (fs.getStatus().equals("Pending")) {
+                req.setAttribute("friendship", true); // da gui yeu cau ket ban
+                req.setAttribute("friend", false);  // chua chap nhan ket ban tu receiver
+            }
 
             ArrayList<User> list = UserDAO.getInstance().selectAll();
             for (User u : list) {

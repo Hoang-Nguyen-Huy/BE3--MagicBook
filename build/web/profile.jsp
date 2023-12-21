@@ -261,11 +261,22 @@
                 </div>
             </c:when>
             <c:otherwise>
-                <form action="profile?id=${userId}" method="post" onsubmit="submitForm(event);">
-                    <input type="hidden" name="action" value="addFriend">
-                    <input type="hidden" id="friendRequestId" name="friendRequestId" value="">
-                    <button type="button" id="addFriendButton" style="background-color: #4267b2; color: white;" onclick="toggleFriendRequest(event, '${userId}')">Add Friend</button>
-                </form>
+                <c:choose>
+                    <c:when test="${friendship && !friend}">
+                        <form action="profile?id=${userId}" method="post" onsubmit="submitForm(event);">
+                            <input type="hidden" name="action" value="addFriend">
+                            <input type="hidden" id="friendRequestId" name="friendRequestId" value="">
+                            <button type="button" id="addFriendButton" style="background-color: red; color: white;" onclick="toggleFriendRequest(event, '${userId}', 'cancelRequest')">Cancel Request</button>
+                        </form>
+                    </c:when>
+                    <c:otherwise>
+                        <form action="profile?id=${userId}" method="post" onsubmit="submitForm(event);">
+                            <input type="hidden" name="action" value="addFriend">
+                            <input type="hidden" id="friendRequestId" name="friendRequestId" value="">
+                            <button type="button" id="addFriendButton" style="background-color: #4267b2; color: white;" onclick="toggleFriendRequest(event, '${userId}', 'addFriend')">Add Friend</button>
+                        </form>                                                         
+                    </c:otherwise>
+                </c:choose>
             </c:otherwise>
         </c:choose>
        
@@ -289,47 +300,22 @@
             // Gọi hàm submit của form
             document.forms[1].submit();
         }
-        let friendRequestSent = false; // Giá trị mặc định: không có yêu cầu bạn bè
+        let friendRequestSent = ${friendship};
         let friendRequestIdInput = document.getElementById('friendRequestId');
         let addButton = document.getElementById('addFriendButton');
 
-        // Lấy giá trị từ localStorage khi trang được tải
-        document.addEventListener("DOMContentLoaded", function () {
-            let storedFriendRequestSent = localStorage.getItem('friendRequestSent');
-            let storedFriendRequestId = localStorage.getItem('friendRequestId');
-
-            if (storedFriendRequestSent && storedFriendRequestId) {
-                friendRequestSent = JSON.parse(storedFriendRequestSent);
-                friendRequestIdInput.value = storedFriendRequestId;
-
-                // Cập nhật giao diện tùy thuộc vào trạng thái lưu trữ
-                if (friendRequestSent) {
-                    addButton.innerText = 'Cancel Request';
-                    addButton.style.backgroundColor = 'red';
-                } else {
-                    addButton.innerText = 'Add Friend';
-                    addButton.style.backgroundColor = '#4267b2';
-                }
-            }
-        });
-
-        function toggleFriendRequest(event, userId) {
+        function toggleFriendRequest(event, userId, action) {
             event.preventDefault();
             event.stopPropagation();
-
-            var friendRequestId = friendRequestIdInput.value;
-
-            if (!friendRequestId) {
-                friendRequestId = 'addFriend'; // Thiết lập giá trị mặc định khi không có giá trị
-            }
-
+            
             $.ajax({
                 type: "POST",
                 url: "profile", // Đổi URL thành servlet hoặc controller chính xác
-                data: { action: friendRequestId, friendRequestId: friendRequestId, id: userId},
+                data: { action: action, friendRequestId: action, id: userId},
                 success: function (response) {
                     console.log(response);
                     // Cập nhật giao diện người dùng tại đây nếu cần
+                    refreshPage();
                 },
                 error: function (error) {
                     console.error("Error:", error);
@@ -337,20 +323,17 @@
             });
 
             if (friendRequestSent) {
-                addButton.innerText = 'Add Friend';
-                addButton.style.backgroundColor = '#4267b2';
-                friendRequestIdInput.value = 'addFriend';
-            } else {
                 addButton.innerText = 'Cancel Request';
                 addButton.style.backgroundColor = 'red';
                 friendRequestIdInput.value = 'cancelRequest';
+            } else {
+                addButton.innerText = 'Add Friend';
+                addButton.style.backgroundColor = '#4267b2';
+                friendRequestIdInput.value = 'addFriend';
             }
 
             friendRequestSent = !friendRequestSent;
 
-            // Lưu trạng thái và action vào localStorage
-            localStorage.setItem('friendRequestSent', JSON.stringify(friendRequestSent));
-            localStorage.setItem('friendRequestId', friendRequestIdInput.value);
         }
 
 
