@@ -5,9 +5,9 @@
  */
 package com.controllers;
 
-import com.model.dao.FriendshipDAO;
+import com.model.dao.GroupDAO;
 import com.model.dao.UserDAO;
-import com.model.dm.Friendship;
+import com.model.dm.Group;
 import com.model.dm.User;
 import com.utils.Util;
 import java.io.IOException;
@@ -20,9 +20,9 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  *
- * @author Dell Latitude 7490
+ * @author Nguyen Huy Hoang
  */
-public class FriendListController extends HttpServlet {
+public class YourGroupsController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -67,31 +67,18 @@ public class FriendListController extends HttpServlet {
                 String name = user.getFirstName() + " " + user.getLastName();
                 req.setAttribute("userName", name);
 
-                ArrayList<Friendship> friendshipList = FriendshipDAO.getInstance().selectByUserId(user.getUserId());
-                ArrayList<User> friendList = new ArrayList<>();
+                ArrayList<Group> groupList = GroupDAO.getInstance().selectByUserId(user.getUserId());
 
-                for (Friendship fs : friendshipList) {
-                    if (!fs.getReceiverId().equals(user.getUserId())) { // khi nguoi dung dang login khong phai la nguoi nhan ket ban
-                        User u = UserDAO.getInstance().selectById(fs.getReceiverId());
-                        friendList.add(u);
-                    } else {
-                        User u = UserDAO.getInstance().selectById(fs.getUserId());
-                        friendList.add(u); // khi nguoi dung lang login la nguoi nhan ket ban
-                    }
+                // encrypt groupId truoc khi dua len url
+                for (Group gr : groupList) {
+                    gr.setGroupId(Util.encryptPassword(gr.getGroupId()));
+                    gr.setUserId(Util.encryptPassword(gr.getUserId()));
+
                 }
 
-                // phai encrypt lai userid truoc khi duoc dua len url hoac la cookie
-                for (User u : friendList) {
-                    u.setUserId(Util.encryptPassword(u.getUserId()));
-                }
+                req.setAttribute("groupList", groupList);
 
-                
-
-                req.setAttribute("friendList", friendList);
-
-                req.getRequestDispatcher("friendList.jsp").forward(req, resp);
-            } else {
-                resp.sendRedirect(req.getContextPath());
+                req.getRequestDispatcher("ownedGroup.jsp").forward(req, resp);
             }
         } else if (!urlId.equals(userId) || userId.equals("")) {
             // Khi account = false la profile cua nguoi khac, khong phai cua nguoi dang log in
@@ -102,27 +89,18 @@ public class FriendListController extends HttpServlet {
             String name = other.getFirstName() + " " + other.getLastName();
             req.setAttribute("userName", name);
 
-            ArrayList<Friendship> friendshipList = FriendshipDAO.getInstance().selectByUserId(other.getUserId());
-            ArrayList<User> friendList = new ArrayList<>();
+            ArrayList<Group> groupList = GroupDAO.getInstance().selectByUserId(other.getUserId());
 
-            for (Friendship fs : friendshipList) {
-                if (!fs.getReceiverId().equals(other.getUserId())) { // khi nguoi dung dang login khong phai la nguoi nhan ket ban
-                    User u = UserDAO.getInstance().selectById(fs.getReceiverId());
-                    friendList.add(u);
-                } else {
-                    User u = UserDAO.getInstance().selectById(fs.getUserId());
-                    friendList.add(u); // khi nguoi dung lang login la nguoi nhan ket ban
-                }
-            }
-                       
-            // phai encrypt lai userid truoc khi duoc dua len url hoac la cookie
-            for (User u : friendList) {
-                u.setUserId(Util.encryptPassword(u.getUserId()));
+            // encrypt groupId truoc khi dua len url
+            for (Group gr : groupList) {
+                gr.setGroupId(Util.encryptPassword(gr.getGroupId()));
+                gr.setUserId(Util.encryptPassword(gr.getUserId()));
             }
 
-            req.setAttribute("friendList", friendList);
+            req.setAttribute("groupList", groupList);
 
-            req.getRequestDispatcher("friendList.jsp").forward(req, resp);
+            req.getRequestDispatcher("ownedGroup.jsp").forward(req, resp);
+
         }
 
     }

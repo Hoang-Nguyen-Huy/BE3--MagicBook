@@ -188,6 +188,22 @@
                 background-color: green;
             }
 
+            .owned-group-button {
+                background-color: #3498db;
+                color: #fff;
+                padding: 10px 15px;
+                font-size: 16px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+                margin-left: 40px;
+            }
+
+            .owned-group-button:hover {
+                background-color: blue;
+            }
+            
             .dropbtn {
                 background-color: #3498db;
                 color: white;
@@ -296,7 +312,13 @@
                 <a href="friend-list?id=${userId}">
                     Friend List
                 </a> 
-            </button>    
+            </button>  
+                    
+            <button class="owned-group-button">
+                <a href="owned-group?id=${userId}">
+                    Owned Group
+                </a> 
+            </button>         
         </div>
                      
         <c:choose>

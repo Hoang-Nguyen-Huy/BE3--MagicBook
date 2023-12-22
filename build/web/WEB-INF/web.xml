@@ -103,4 +103,13 @@
         <url-pattern>/create-group</url-pattern>
     </servlet-mapping>
     
+    <servlet>
+        <servlet-name>YourGroupsController</servlet-name>
+        <servlet-class>com.controllers.YourGroupsController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>YourGroupsController</servlet-name>
+        <url-pattern>/owned-group</url-pattern>
+    </servlet-mapping>
+    
 </web-app>

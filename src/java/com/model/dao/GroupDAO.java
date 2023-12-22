@@ -74,7 +74,7 @@ public class GroupDAO implements I_DAO<Group>{
             Connection con = JDBCUtil.getConnection();
             
             String sql = "SELECT * FROM gr"
-                    + " WHERE UserId = ?";
+                    + " WHERE GroupId = ?";
             
             PreparedStatement pst = con.prepareStatement(sql);
             
@@ -92,6 +92,40 @@ public class GroupDAO implements I_DAO<Group>{
             }
             JDBCUtil.closeConnection(con);
             
+        } catch(Exception e) {
+            
+        }
+        return res;
+        
+    }
+    
+    public ArrayList<Group> selectByUserId (String userId) {
+        
+        ArrayList<Group> res = new ArrayList<>();
+        try {
+            
+            Connection con = JDBCUtil.getConnection();
+            
+            String sql = "SELECT * FROM gr"
+                    + " WHERE UserId = ?";
+            
+            PreparedStatement pst = con.prepareStatement(sql);
+            
+            pst.setString(1, userId);
+            
+            ResultSet rs = pst.executeQuery();
+            
+            while(rs.next()) {
+                String groupId = rs.getString("GroupId");
+                String name = rs.getString("name");
+                String avatar = rs.getString("avatar");
+                String id = rs.getString("UserId");
+                
+                Group gr = new Group(groupId, name, avatar, id);
+                
+                res.add(gr);
+            }
+            JDBCUtil.closeConnection(con);
         } catch(Exception e) {
             
         }

@@ -5,11 +5,9 @@
  */
 package com.controllers;
 
-import com.model.dao.GroupAccessDAO;
 import com.model.dao.GroupDAO;
 import com.model.dao.UserDAO;
 import com.model.dm.Group;
-import com.model.dm.GroupAccess;
 import com.model.dm.User;
 import com.utils.Validation;
 import java.io.File;
@@ -50,7 +48,7 @@ public class CreateGroupController extends HttpServlet {
                 user = UserDAO.getInstance().checkAccessToHome(id);
             }
         }
-        
+
         Group gr = new Group(); // de tao group moi
         String avatar = "";
 
@@ -66,14 +64,14 @@ public class CreateGroupController extends HttpServlet {
             List<FileItem> items = upload.parseRequest(req);
 
             Iterator<FileItem> iter = items.iterator();
-            while(iter.hasNext()) {
+            while (iter.hasNext()) {
                 FileItem item = iter.next();
-                
+
                 if (item.isFormField()) {
                     String name = item.getFieldName();
                     String value = item.getString();
                     System.out.println("name: " + name + "value: " + value);
-                    
+
                     if ("groupName".equals(name)) {
                         if (!Validation.checkNameCountry(value)) {
                             req.setAttribute("error", "This name is not valid");
@@ -102,17 +100,11 @@ public class CreateGroupController extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
         gr.setUserId(user.getUserId());
         GroupDAO.getInstance().insert(gr);
-        
-        Group check = GroupDAO.getInstance().selectById(user.getUserId());
-        if (check != null) {
-            GroupAccess grAccess = new GroupAccess(1, check.getUserId(), check.getGroupId()); // tao access cho group
-            GroupAccessDAO.getInstance().insert(grAccess);
-            resp.sendRedirect(req.getContextPath() + "/profile");  //vi chua code frontend cho group nen tam thoi toi profile        
-        }
-        
+
+        resp.sendRedirect(req.getContextPath() + "/profile");  //vi chua code frontend cho group nen tam thoi toi profile        
 
     }
 
