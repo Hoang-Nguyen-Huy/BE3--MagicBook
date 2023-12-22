@@ -158,6 +158,40 @@ public class FriendshipDAO implements I_DAO<Friendship> {
         return res;
         
     }
+    
+    public ArrayList<Friendship> selectByUserId (String userId) {
+        
+        ArrayList<Friendship> res = new ArrayList<>();
+        try {
+            
+            Connection con = JDBCUtil.getConnection();
+            
+            String sql = "SELECT * FROM friendship"
+                    + " WHERE (UserId = ? OR receiverId = ?)"
+                    + " AND status = 'Accepted'";
+            
+            PreparedStatement pst = con.prepareStatement(sql);
+            
+            pst.setString(1, userId);
+            pst.setString(2, userId);
+            
+            ResultSet rs = pst.executeQuery();
+            
+            while(rs.next()) {
+                String friendshipId = rs.getString("FriendshipId");
+                String status = rs.getString("status");
+                String receiver = rs.getString("receiverId");
+                String user = rs.getString("UserId");
+                
+                Friendship fs = new Friendship(friendshipId, status, receiver, user);
+                res.add(fs);
+            }
+            JDBCUtil.closeConnection(con);
+        } catch (Exception e) {
+            
+        }
+        return res;
+    }
 
     @Override
     public ArrayList<Friendship> selectByCondition(String condition) {

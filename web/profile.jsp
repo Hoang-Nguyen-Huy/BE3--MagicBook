@@ -148,6 +148,30 @@
                 height: 20px; /* Kích thước mong muốn cho ảnh */
                 margin-right: 8px;
             }
+            
+            /* Thêm kiểu dáng cho phần profile-container */
+            .profile-container {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 20px;
+            }
+
+            /* Cập nhật kiểu dáng cho friend-list-button */
+            .friend-list-button {
+                background-color: #3498db;
+                color: #fff;
+                padding: 10px 15px;
+                font-size: 16px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+            }
+
+            .friend-list-button:hover {
+                background-color: #2980b9;
+            }
 
             .dropbtn {
                 background-color: #3498db;
@@ -243,15 +267,23 @@
     </header>
 
     <main>
-        <div class="profile">
-            <img src="${avatar}" alt="Profile Picture">
-            <div class="profile-info">
-                <h2>${userName}</h2>
-                <p>Gender: ${gender}</p>
-                <p>Location: ${country}</p>
+        <div class="profile-container">
+            <div class="profile">
+                <img src="${avatar}" alt="Profile Picture">
+                <div class="profile-info">
+                    <h2>${userName}</h2>
+                    <p>Gender: ${gender}</p>
+                    <p>Location: ${country}</p>
+                </div>
             </div>
+            <!-- Button Friend List -->
+            <button class="friend-list-button">
+                <a href="friend-list?id=${userId}">
+                    Friend List
+                </a> 
+            </button>
         </div>
-          
+                     
         <c:choose>
             <c:when test="${account}">
                 <div class="post-form">
@@ -306,51 +338,55 @@
     </main>
 
     <script>
-        function submitForm(event) {
-            // Xử lý logic của bạn ở đây
+        <c:choose>
+            <c:when test="${!account}">
+                function submitForm(event) {
+                    // Xử lý logic của bạn ở đây
 
-            // Ngăn chặn hành vi mặc định của form (chuyển hướng)
-            event.preventDefault();
+                    // Ngăn chặn hành vi mặc định của form (chuyển hướng)
+                    event.preventDefault();
 
-            // Gọi hàm submit của form
-            document.forms[1].submit();
-        }
-        let friendRequestSent = ${friendship};
-        let friendRequestIdInput = document.getElementById('friendRequestId');
-        let addButton = document.getElementById('addFriendButton');
-
-        function toggleFriendRequest(event, userId, action) {
-            event.preventDefault();
-            event.stopPropagation();
-            
-            $.ajax({
-                type: "POST",
-                url: "profile", // Đổi URL thành servlet hoặc controller chính xác
-                data: { action: action, friendRequestId: action, id: userId},
-                success: function (response) {
-                    console.log(response);
-                    // Cập nhật giao diện người dùng tại đây nếu cần
-                    refreshPage();
-                },
-                error: function (error) {
-                    console.error("Error:", error);
+                    // Gọi hàm submit của form
+                    document.forms[1].submit();
                 }
-            });
+                let friendRequestSent = ${friendship};
+                let friendRequestIdInput = document.getElementById('friendRequestId');
+                let addButton = document.getElementById('addFriendButton');
 
-            if (friendRequestSent) {
-                addButton.innerText = 'Cancel Request';
-                addButton.style.backgroundColor = 'red';
-                friendRequestIdInput.value = 'cancelRequest';
-            } else {
-                addButton.innerText = 'Add Friend';
-                addButton.style.backgroundColor = '#4267b2';
-                friendRequestIdInput.value = 'addFriend';
-            }
+                function toggleFriendRequest(event, userId, action) {
+                    event.preventDefault();
+                    event.stopPropagation();
 
-            friendRequestSent = !friendRequestSent;
+                    $.ajax({
+                        type: "POST",
+                        url: "profile", // Đổi URL thành servlet hoặc controller chính xác
+                        data: { action: action, friendRequestId: action, id: userId},
+                        success: function (response) {
+                            console.log(response);
+                            // Cập nhật giao diện người dùng tại đây nếu cần
+                            refreshPage();
+                        },
+                        error: function (error) {
+                            console.error("Error:", error);
+                        }
+                    });
 
-        }
+                    if (friendRequestSent) {
+                        addButton.innerText = 'Cancel Request';
+                        addButton.style.backgroundColor = 'red';
+                        friendRequestIdInput.value = 'cancelRequest';
+                    } else {
+                        addButton.innerText = 'Add Friend';
+                        addButton.style.backgroundColor = '#4267b2';
+                        friendRequestIdInput.value = 'addFriend';
+                    }
 
+                    friendRequestSent = !friendRequestSent;
+
+                }
+            </c:when>
+        </c:choose>
+        
 
         function submitPost() {
             const postContent = document.getElementById('postContent').value;
@@ -359,7 +395,7 @@
                 const newPost = document.createElement('div');
                 newPost.className = 'post';
                 newPost.innerHTML = "<h3>User Name</h3><p>"+postContent+"</p>";
-                console.log(newPost)
+                console.log(newPost);
                 postContainer.append(newPost);
                 document.getElementById('postContent').value = '';
             }
@@ -396,7 +432,7 @@
                     }
                 }
             }
-        }
+        };
     </script>
 
 </body>

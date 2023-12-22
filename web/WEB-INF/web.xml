@@ -76,4 +76,13 @@
         <url-pattern>/search</url-pattern>
     </servlet-mapping>
     
+    <servlet>
+        <servlet-name>FriendListController</servlet-name>
+        <servlet-class>com.controllers.FriendListController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>FriendListController</servlet-name>
+        <url-pattern>/friend-list</url-pattern>
+    </servlet-mapping>
+    
 </web-app>

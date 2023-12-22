@@ -5,9 +5,11 @@
         <group>
             <file>file:/C:/Users/Dell%20Latitude%207490/Documents/NetBeansProjects/MagicBook/src/java/com/controllers/ProfileController.java</file>
             <file>file:/C:/Users/Dell%20Latitude%207490/Documents/NetBeansProjects/MagicBook/src/java/com/controllers/SearchController.java</file>
+            <file>file:/C:/Users/Dell%20Latitude%207490/Documents/NetBeansProjects/MagicBook/src/java/com/controllers/FriendListController.java</file>
             <file>file:/C:/Users/Dell%20Latitude%207490/Documents/NetBeansProjects/MagicBook/web/profile.jsp</file>
+            <file>file:/C:/Users/Dell%20Latitude%207490/Documents/NetBeansProjects/MagicBook/web/friendList.jsp</file>
             <file>file:/C:/Users/Dell%20Latitude%207490/Documents/NetBeansProjects/MagicBook/src/java/com/model/dao/FriendshipDAO.java</file>
-            <file>file:/C:/Users/Dell%20Latitude%207490/Documents/NetBeansProjects/MagicBook/src/java/com/model/dao/UserDAO.java</file>
+            <file>file:/C:/Users/Dell%20Latitude%207490/Documents/NetBeansProjects/MagicBook/src/java/com/model/dm/User.java</file>
         </group>
     </open-files>
 </project-private>

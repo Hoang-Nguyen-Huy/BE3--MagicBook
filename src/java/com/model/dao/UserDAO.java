@@ -179,6 +179,7 @@ public class UserDAO implements I_DAO<User> {
             ResultSet rs = pst.executeQuery();
 
             while (rs.next()) {
+                String userId = rs.getString("UserId");
                 String firstName = rs.getString("firstName");
                 String lastName = rs.getString("lastName");
                 Date dob = rs.getDate("dob");
@@ -189,7 +190,7 @@ public class UserDAO implements I_DAO<User> {
                 String password = rs.getString("password");
                 String avatar = rs.getString("avatar");
 
-                result = new User(firstName, lastName, dob, sex, country, phone, email, password, avatar);
+                result = new User(userId, firstName, lastName, dob, sex, country, phone, email, password, avatar);
             }
             JDBCUtil.closeConnection(con);
 
