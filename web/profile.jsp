@@ -172,6 +172,21 @@
             .friend-list-button:hover {
                 background-color: #2980b9;
             }
+            
+            .create-group-button {
+                background-color: #3498db;
+                color: #fff;
+                padding: 10px 15px;
+                font-size: 16px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+            }
+
+            .create-group-button:hover {
+                background-color: green;
+            }
 
             .dropbtn {
                 background-color: #3498db;
@@ -281,11 +296,16 @@
                 <a href="friend-list?id=${userId}">
                     Friend List
                 </a> 
-            </button>
+            </button>    
         </div>
                      
         <c:choose>
             <c:when test="${account}">
+                <button class="create-group-button">
+                    <a href="create-group">
+                        Create Group
+                    </a> 
+                </button>    
                 <div class="post-form">
                     <textarea id="postContent" placeholder="What's on your mind?" rows="4"></textarea>
                     <input type="file" id="fileInput" accept="image/*, video/*">
