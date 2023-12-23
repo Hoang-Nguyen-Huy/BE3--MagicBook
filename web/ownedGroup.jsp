@@ -267,7 +267,7 @@
                     <c:forEach var="groupList" items="${groupList}">
                         <div class="user">
                             <img src="${groupList.avatar}" width="70" height="80" alt="Avatar">
-                            <a href="profile?id=${groupList.groupId}">
+                            <a href="group?groupid=${groupList.groupId}">
                                 <c:out value="${groupList.name}"/>
                             </a>
                         </div>

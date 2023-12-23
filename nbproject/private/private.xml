@@ -3,8 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Dell%20Latitude%207490/Documents/NetBeansProjects/MagicBook/src/java/com/controllers/CreateGroupController.java</file>
-            <file>file:/C:/Users/Dell%20Latitude%207490/Documents/NetBeansProjects/MagicBook/web/createGroup.jsp</file>
+            <file>file:/C:/Users/Dell%20Latitude%207490/Documents/NetBeansProjects/MagicBook/src/java/com/model/dao/GroupAccessDAO.java</file>
+            <file>file:/C:/Users/Dell%20Latitude%207490/Documents/NetBeansProjects/MagicBook/src/java/com/controllers/ProfileController.java</file>
+            <file>file:/C:/Users/Dell%20Latitude%207490/Documents/NetBeansProjects/MagicBook/web/group.jsp</file>
+            <file>file:/C:/Users/Dell%20Latitude%207490/Documents/NetBeansProjects/MagicBook/web/profile.jsp</file>
+            <file>file:/C:/Users/Dell%20Latitude%207490/Documents/NetBeansProjects/MagicBook/src/java/com/model/dao/GroupDAO.java</file>
             <file>file:/C:/Users/Dell%20Latitude%207490/Documents/NetBeansProjects/MagicBook/src/java/com/controllers/GroupController.java</file>
         </group>
     </open-files>

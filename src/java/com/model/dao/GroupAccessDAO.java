@@ -9,6 +9,7 @@ import com.model.dm.GroupAccess;
 import com.utils.JDBCUtil;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 
 /**
@@ -55,13 +56,64 @@ public class GroupAccessDAO implements I_DAO<GroupAccess>{
     }
 
     @Override
-    public int delete(GroupAccess t) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public int delete(GroupAccess access) {
+        
+        int res = 0;
+        try {
+            
+            Connection con = JDBCUtil.getConnection();
+            
+            String sql = "DELETE FROM groupaccess"
+                    + " WHERE UserId = ? AND GroupId = ?";
+            
+            PreparedStatement pst = con.prepareStatement(sql);
+            
+            pst.setString(1, access.getUserId());
+            pst.setString(2, access.getGroupId());
+            
+            res = pst.executeUpdate();
+            
+            JDBCUtil.closeConnection(con);
+            
+        } catch(Exception e) {
+            
+        }
+        return res;
+        
     }
 
     @Override
     public ArrayList<GroupAccess> selectAll() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        ArrayList<GroupAccess> res = new ArrayList<>();
+        try {
+            
+            Connection con = JDBCUtil.getConnection();
+            
+            String sql = "SELECT * FROM groupaccess";
+            
+            PreparedStatement pst = con.prepareStatement(sql);
+            
+            ResultSet rs = pst.executeQuery();
+            
+            while(rs.next()) {
+                String accessId = rs.getString("AccessId");
+                int isAdmin = rs.getInt("isAdmin");
+                String userId = rs.getString("userId");
+                String groupId = rs.getString("groupId");
+                
+                GroupAccess access = new GroupAccess(accessId, isAdmin, userId, groupId);
+                
+                res.add(access);
+            }
+            
+            JDBCUtil.closeConnection(con);
+            
+        } catch (Exception e) {
+            
+        }
+        return res;
+        
     }
 
     @Override
@@ -72,6 +124,18 @@ public class GroupAccessDAO implements I_DAO<GroupAccess>{
     @Override
     public ArrayList<GroupAccess> selectByCondition(String condition) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    public int checkMember(String userId, String groupId) {
+        
+        ArrayList<GroupAccess> check = selectAll();
+        for (GroupAccess access : check) {
+            if (access.getUserId().equals(userId) && access.getGroupId().equals(groupId)) {
+                return access.getIsAdmin();
+            }
+        }
+        return -1;
+        
     }
     
 }

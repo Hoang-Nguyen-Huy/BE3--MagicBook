@@ -7,6 +7,7 @@ package com.model.dao;
 
 import com.model.dm.Group;
 import com.utils.JDBCUtil;
+import com.utils.Util;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -62,7 +63,35 @@ public class GroupDAO implements I_DAO<Group>{
 
     @Override
     public ArrayList<Group> selectAll() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        ArrayList<Group> res = new ArrayList<>();
+        try {
+            
+            Connection con = JDBCUtil.getConnection();
+            
+            String sql = "SELECT * FROM gr";
+            
+            PreparedStatement pst = con.prepareStatement(sql);
+            
+            ResultSet rs = pst.executeQuery();
+            
+            while(rs.next()) {
+                String groupId = rs.getString("GroupId");
+                String name = rs.getString("name");
+                String avatar = rs.getString("avatar");
+                String userId = rs.getString("UserId");
+                
+                Group gr = new Group(groupId, name, avatar, userId);
+                
+                res.add(gr);
+            }
+            JDBCUtil.closeConnection(con);
+            
+        } catch(Exception e) {
+            
+        }
+        return res;
+        
     }
 
     @Override
@@ -136,6 +165,31 @@ public class GroupDAO implements I_DAO<Group>{
     @Override
     public ArrayList<Group> selectByCondition(String condition) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    public Group checkIdFromUrl(String id) { // ham nay tuong tu ham checkAccessToHome ben UserDAO
+        
+        ArrayList<Group> check = selectAll();
+        Group gr = null;
+        for (Group g : check) {
+            if (Util.encryptPassword(g.getGroupId()).equals(id)) {
+                gr = g;
+            }
+        }
+        return gr;
+        
+    }
+    
+    public boolean checkCreator(String userId, String groupId) {
+        
+        ArrayList<Group> check = selectAll();
+        for (Group gr : check) {
+            if (gr.getUserId().equals(userId) && gr.getGroupId().equals(groupId)) {
+                return true;
+            }
+        }
+        return false;
+        
     }
     
 }
