@@ -320,13 +320,7 @@
                             <a href="member-list?groupid=${groupId}">
                                 Member List
                             </a>
-                        </button>  
-                        
-                        <button class="delete-group-button">
-                            <a href="delete-group?groupid=${groupId}">
-                                Delete Group
-                            </a> 
-                        </button> 
+                        </button>                          
                     </div> 
                     <div class="post-form">
                         <textarea id="postContent" placeholder="What's on your mind?" rows="4"></textarea>
@@ -349,6 +343,11 @@
                                 <input type="hidden" id="memberRequestId" name="memberRequestId" value="">
                                 <button type="button" id="joinGroupButton" style="background-color: red; color: white;" onclick="toggleMemberRequest(event, '${groupId}', 'leaveGroup')">Leave Group</button>
                             </form>
+                            <button class="grant-admin-button">
+                                <a href="member-list?groupid=${groupId}">
+                                    Member List
+                                </a>
+                            </button> 
                             <div class="post-form">
                                 <textarea id="postContent" placeholder="What's on your mind?" rows="4"></textarea>
                                 <input type="file" id="fileInput" accept="image/*, video/*">

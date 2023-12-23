@@ -121,4 +121,13 @@
         <url-pattern>/update-group</url-pattern>
     </servlet-mapping>
     
+    <servlet>
+        <servlet-name>MemberListController</servlet-name>
+        <servlet-class>com.controllers.MemberListController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>MemberListController</servlet-name>
+        <url-pattern>/member-list</url-pattern>
+    </servlet-mapping>
+    
 </web-app>
