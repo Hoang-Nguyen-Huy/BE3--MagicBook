@@ -12,8 +12,6 @@ import com.model.dm.Group;
 import com.model.dm.GroupAccess;
 import com.model.dm.User;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
@@ -110,6 +108,8 @@ public class GroupController extends HttpServlet {
             // account = true khi nguoi tao gr la nguoi dang log
             req.setAttribute("account", true);
 
+            req.setAttribute("groupId", groupId);
+
             req.getRequestDispatcher("group.jsp").forward(req, resp);
         } else if (!GroupDAO.getInstance().checkCreator(user.getUserId(), gr.getGroupId())) {
             //account = false khi nguoi dang log khong phai la nguoi tao group
@@ -119,18 +119,21 @@ public class GroupController extends HttpServlet {
                 // admin = true khi admin la nguoi dang log
                 req.setAttribute("admin", true);
                 req.setAttribute("member", true);
+                req.setAttribute("groupId", groupId);
 
                 req.getRequestDispatcher("group.jsp").forward(req, resp);
             } else if (GroupAccessDAO.getInstance().checkMember(user.getUserId(), gr.getGroupId()) == 0) { // member = true thi hien nut Post, Leave Group
                 // member = true khi nguoi dang log la member
                 req.setAttribute("member", true);
                 req.setAttribute("admin", false);
+                req.setAttribute("groupId", groupId);
 
                 req.getRequestDispatcher("group.jsp").forward(req, resp);
             } else if (GroupAccessDAO.getInstance().checkMember(user.getUserId(), gr.getGroupId()) == -1) { // tuseday = true thi hien nut Join
                 // tuesday = true khi nguoi dang log ko phai la member 
                 req.setAttribute("tuesday", true);
                 req.setAttribute("member", false);
+                req.setAttribute("groupId", groupId);
 
                 req.getRequestDispatcher("group.jsp").forward(req, resp);
             }

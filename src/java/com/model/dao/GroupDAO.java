@@ -52,13 +52,39 @@ public class GroupDAO implements I_DAO<Group>{
     }
 
     @Override
-    public int update(Group t) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public int update(Group group) {
+        
+        int res = 0;
+        try {
+            
+            Connection con = JDBCUtil.getConnection();
+            
+            String sql = "UPDATE gr"
+                    + " SET "
+                    + "name = ?"
+                    + ", avatar = ?"
+                    + " WHERE GroupId = ?";
+            
+            PreparedStatement pst = con.prepareStatement(sql);
+            
+            pst.setString(1, group.getName());
+            pst.setString(2, group.getAvatar());
+            pst.setString(3, group.getGroupId());
+            
+            res = pst.executeUpdate();
+            
+            JDBCUtil.closeConnection(con);
+             
+        } catch(Exception e) {
+            
+        }
+        return res;
+        
     }
 
     @Override
-    public int delete(Group t) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public int delete(Group group) {
+       throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override

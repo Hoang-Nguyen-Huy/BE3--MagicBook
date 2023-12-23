@@ -311,19 +311,19 @@
                 <c:when test="${account}">
                     <div class="group-buttons">
                         <button class="create-group-button">
-                            <a href="update-group">
+                            <a href="update-group?groupid=${groupId}">
                                 Update Group
                             </a> 
                         </button>   
                         
                         <button class="grant-admin-button">
-                            <a href="grant-admin">
-                                Grant Admin
+                            <a href="member-list?groupid=${groupId}">
+                                Member List
                             </a>
                         </button>  
                         
                         <button class="delete-group-button">
-                            <a href="delete-group">
+                            <a href="delete-group?groupid=${groupId}">
                                 Delete Group
                             </a> 
                         </button> 

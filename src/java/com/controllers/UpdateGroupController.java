@@ -30,13 +30,14 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
  *
  * @author Nguyen Huy Hoang
  */
-public class CreateGroupController extends HttpServlet {
+public class UpdateGroupController extends HttpServlet{
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+        
         User user = new User();
         String id = ""; // id lay tu cookie
+        String urlGroupId = req.getParameter("groupid");
         Cookie[] cookies = req.getCookies();
         if (cookies == null) {
             resp.sendRedirect(req.getContextPath());
@@ -48,10 +49,10 @@ public class CreateGroupController extends HttpServlet {
                 user = UserDAO.getInstance().checkAccessToHome(id);
             }
         }
-
-        Group gr = new Group(); // de tao group moi
+        
+        Group upGr = GroupDAO.getInstance().checkIdFromUrl(urlGroupId);  //update Group
         String avatar = "";
-
+        
         try {
             DiskFileItemFactory factory = new DiskFileItemFactory();
 
@@ -73,18 +74,17 @@ public class CreateGroupController extends HttpServlet {
                     System.out.println("name: " + name + "value: " + value);
 
                     if ("groupName".equals(name)) {
-                        if (!Validation.checkNameCountry(value)) {
+                        if (!Validation.checkUpNameCountry(value)) {
                             req.setAttribute("error", "This name is not valid");
-                            req.getRequestDispatcher("createGroup.jsp").forward(req, resp);
-                        } else {
-                            gr.setName(value);
+                            req.getRequestDispatcher("updateGroup.jsp").forward(req, resp);
+                        } else if (!value.isEmpty()){
+                            upGr.setName(value);
                         }
                     }
                 } else {
                     if ("avatar".equals(item.getFieldName())) {
                         avatar = item.getName();
                         if (avatar.equals("")) {
-                            gr.setAvatar("DefaultImg\\group-avatar-icon.png");
                             break;
                         } else {
                             Path path = Paths.get(avatar);
@@ -92,7 +92,7 @@ public class CreateGroupController extends HttpServlet {
                             File uploadFile = new File(storePath + "/" + path.getFileName());
                             item.write(uploadFile);
                             System.out.println(storePath + "/" + path.getFileName());
-                            gr.setAvatar("avatarGroup\\" + path.getFileName());
+                            upGr.setAvatar("avatarGroup\\" + path.getFileName());
                         }
                     }
                 }
@@ -100,21 +100,24 @@ public class CreateGroupController extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        gr.setUserId(user.getUserId());
-        GroupDAO.getInstance().insert(gr);
-
-        resp.sendRedirect("profile");  //vi chua code frontend cho group nen tam thoi toi profile        
-
+        GroupDAO.getInstance().update(upGr);
+        
+        resp.sendRedirect("group?groupid=" + urlGroupId);  
+        
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+        
         User user = null;
-        String id = ""; // id lay tu cookie
+        String id = "";
+        String urlGroupId = req.getParameter("groupid");
+        if (urlGroupId == null) {
+            resp.sendRedirect("home");
+            return;
+        }
         Cookie[] cookies = req.getCookies();
-        if (cookies == null) {
+        if(cookies == null) {
             resp.sendRedirect(req.getContextPath());
             return;
         }
@@ -122,14 +125,16 @@ public class CreateGroupController extends HttpServlet {
             if (cookie.getName().equals("id")) {
                 id = cookie.getValue();
                 user = UserDAO.getInstance().checkAccessToHome(id);
+                break;
             }
         }
         if (user != null) {
             req.setAttribute("userId", id);
-            req.getRequestDispatcher("createGroup.jsp").forward(req, resp);
+            req.getRequestDispatcher("updateGroup.jsp").forward(req, resp);
         } else {
             resp.sendRedirect(req.getContextPath());
         }
+        
     }
-
+    
 }

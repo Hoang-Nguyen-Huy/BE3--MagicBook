@@ -112,4 +112,13 @@
         <url-pattern>/owned-group</url-pattern>
     </servlet-mapping>
     
+    <servlet>
+        <servlet-name>UpdateGroupController</servlet-name>
+        <servlet-class>com.controllers.UpdateGroupController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UpdateGroupController</servlet-name>
+        <url-pattern>/update-group</url-pattern>
+    </servlet-mapping>
+    
 </web-app>
