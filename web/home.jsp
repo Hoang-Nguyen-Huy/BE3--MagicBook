@@ -235,11 +235,23 @@
         </header>
 
         <main>
-            <div class="post-form">
-                <textarea id="postContent" placeholder="What's on your mind?" rows="4"></textarea>
-                <input type="file" id="fileInput" accept="image/*, video/*">
-                <button onclick="submitPost()">Post</button>
-            </div>
+            <form action="home" method="post" enctype="multipart/form-data">
+                <div class="post-form">
+                    <label>
+                        <input type="radio" name="visibility" value="public" checked> Public
+                    </label>
+                    <label>
+                        <input type="radio" name="visibility" value="friend"> Friends
+                    </label>
+                    <label>
+                        <input type="radio" name="visibility" value="onlyme"> Only Me
+                    </label>
+                    <textarea id="postContent" name="postContent" placeholder="What's on your mind?" rows="4"></textarea>
+                    <input type="file" id="fileInput" name="fileInput" accept="image/*, video/*">
+                    
+                    <button type="submit">Post</button>
+                </div>
+            </form>
             <div id="postsContainer">
                 <h2>Recent Posts</h2>
                 <div class="post">
@@ -253,18 +265,6 @@
         </main>
 
         <script>
-            function submitPost() {
-                const postContent = document.getElementById('postContent').value;
-                if (postContent.trim() !== '') {
-                    const postContainer = document.getElementById('postsContainer');
-                    const newPost = document.createElement('div');
-                    newPost.className = 'post';
-                    newPost.innerHTML = "<h3>User Name</h3><p>"+postContent+"</p>";
-                    console.log(newPost)
-                    postContainer.append(newPost);
-                    document.getElementById('postContent').value = '';
-                }
-            }
 
             function openMessages() {
                 alert("Redirect to Messages Page");
