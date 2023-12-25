@@ -4,6 +4,8 @@
     Author     : Dell Latitude 7490
 --%>
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -94,27 +96,124 @@
             }
 
             .post {
+                width: 40%;
+                margin: auto;
                 background-color: white;
                 padding: 20px;
-                margin-bottom: 20px;
                 border-radius: 8px;
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            }
-
-            .post-form {
-                width: 30%;
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+                position: relative; /* Để có thể định vị phần info */
                 display: flex;
                 flex-direction: column;
                 align-items: flex-start;
             }
+            
+            .post-avatar {
+                display: flex;
+                align-items: flex-start;
+                position: relative;
+            }
+            
+            .avatar-wrapper {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-right: 10px; /* Tùy chỉnh khoảng cách giữa avatar và nút */
+            }
+            
+            .post-actions {
+                position: relative;
+            }
+            
+            .edit-post-btn,
+            .delete-post-btn {
+                background-color: #4267b2;
+                color: white;
+                padding: 6px;
+                font-size: 12px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                margin-right: 5px;
+                transition: background-color 0.3s ease;
+            }
+            
+            .edit-post-btn:hover,
+            .delete-post-btn:hover {
+                background-color: #345291;
+            }
+            
+            .post-info {
+                position: absolute;
+                top: 0;
+                right: 0;
+                text-align: right;
+            }
+            
+            .post-header {
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 10px;
+            }
+            
+            .post-info {
+                text-align: right;
+            }
 
+            .post-date, .post-time {
+                font-size: 12px;
+                color: #888;
+                margin: 0;
+            }
+
+            .post-form {
+                width: 100%; /* Tăng độ rộng của post form */
+                margin: auto; /* Để căn giữa post form */
+                background-color: #fff; /* Màu nền của post form */
+                padding: 20px; /* Khoảng cách giữa các phần tử trong post form */
+                border-radius: 8px; /* Bo tròn góc */
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); /* Đổ bóng */
+                position: relative;
+            }
+            
+            .post-form label {
+                display: flex;
+                align-items: center;
+                margin-bottom: 10px;
+            }
+              
             .post-form textarea {
                 width: 100%;
+                margin-bottom: 10px;
+                padding: 10px;
+                resize: vertical;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                transition: border-color 0.3s ease;
+            }
+            
+            .post-form input[type="file"] {
                 margin-bottom: 10px;
             }
 
             .post-form button {
-                align-self: flex-end;
+                background-color: #4267b2;
+                color: white;
+                padding: 12px;
+                font-size: 16px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+                position: absolute; /* Đặt vị trí tuyệt đối */
+                bottom: 10px; /* Duyệt phần dưới cùng của post form */
+                right: 10px; /* Đặt nút "Post" về phía bên phải */
+            }
+            
+            .post-form button:hover {
+                background-color: #345291;
             }
 
             .side-buttons {
@@ -246,25 +345,114 @@
                     <label>
                         <input type="radio" name="visibility" value="onlyme"> Only Me
                     </label>
-                    <textarea id="postContent" name="postContent" placeholder="What's on your mind?" rows="4"></textarea>
+                    <textarea id="postContent" name="postContent" placeholder="What's on your mind?" rows="6"></textarea>
                     <input type="file" id="fileInput" name="fileInput" accept="image/*, video/*">
                     
                     <button type="submit">Post</button>
                 </div>
             </form>
-            <div id="postsContainer">
-                <h2>Recent Posts</h2>
-                <div class="post">
-                    <h3>User Name</h3>
-                    <p>This is a sample post. Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>
-                </div>
-                <!-- Additional posts go here -->
-            </div>
             
+            <div id="postsContainer">
+                <h2>Recent Posts</h2>      
+                <c:forEach var="entry" items="${post}">
+                    <div class="post">
+                        <div class="post-avatar">
+                            <div class="avatar-wrapper">
+                                <img src="${entry.key.getAvatar()}" width="35" height="40" alt="Avatar">
+                                <!-- Thêm nút Edit và Delete -->
+                                <c:if test="${userId eq entry.key.getUserId()}">
+                                    <div class="post-actions">
+                                        <form action="home" method="post">
+                                            <button class="edit-post-btn" onclick="editPost(${entry.value.getPostId()})">Edit</button>
+                                            <button class="delete-post-btn" onclick="deletePost(${entry.value.getPostId()})">Delete</button>
+                                        </form>
+                                    </div>
+                                </c:if>
+                            </div>
+                        </div>
+                            
+                       <div class="post-header">
+                            <h3>
+                                <a href="profile?id=${entry.key.getUserId()}">
+                                    <c:out value="${entry.key.getFirstName()} ${entry.key.getLastName()}"/>
+                                </a>
+                            </h3>
+
+                             <!-- Hiển thị thông tin ngày và giờ bài đăng -->
+                            <div class="post-info">
+                                <p class="post-date">${entry.value.getPostDate()}</p>
+                                <p class="post-time">${entry.value.getPostTime()}</p>
+                            </div>
+                        </div>
+                        
+                        <p><c:out value="${entry.value.getContent()}"/></p>
+                        
+                        <c:choose>
+                            <c:when test="${entry.value.getFile() != null}">
+                                <c:set var="fileName" value="${entry.value.getFile()}" />
+                                <c:set var="lowercaseFileName" value="${fn:toLowerCase(fileName)}" />
+
+                                <c:choose>
+                                    <c:when test="${lowercaseFileName.endsWith('.mp4') or lowercaseFileName.endsWith('.mp3') or lowercaseFileName.endsWith('.mov')}">
+                                        <!-- Nếu là video -->
+                                        <video width="320" height="400" controls>
+                                            <source src="${entry.value.getFile()}" type="video/${lowercaseFileName.substring(lowercaseFileName.lastIndexOf('.') + 1)}">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <!-- Nếu là hình ảnh -->
+                                        <img src="${entry.value.getFile()}" alt="Image Description" width="320" height="400">
+                                    </c:otherwise>
+                                </c:choose>
+                            </c:when>
+                        </c:choose>
+                        <div class="post-actions">
+                            <!-- Nút Like -->
+                            <button class="like-btn" onclick="likePost(${entry.value.getPostId()})">
+                                Like
+                            </button>
+
+                            <!-- Nút Comment -->
+                            <button class="comment-btn" onclick="commentOnPost(${entry.value.getPostId()})">
+                                Comment
+                            </button>
+                        </div>
+                    </div>                      
+                        <hr>
+                </c:forEach>
+            </div>
             
         </main>
 
         <script>
+            
+             // Hàm để xử lý sự kiện khi click nút Like
+            function likePost(postId) {
+                alert("Liked Post with ID: " + postId);
+                // Thêm logic để thực hiện hành động "Like" và cập nhật trạng thái trên giao diện
+            }
+
+            // Hàm để xử lý sự kiện khi click nút Comment
+            function commentOnPost(postId) {
+                alert("Commented on Post with ID: " + postId);
+                // Thêm logic để chuyển người dùng đến trang comment tương ứng hoặc hiển thị form comment ngay trên giao diện
+            }
+            
+              // Hàm để xử lý sự kiện khi click nút Edit Post
+            function editPost(postId) {
+                alert("Edit Post with ID: " + postId);
+                // Thêm logic để chuyển người dùng đến trang edit post tương ứng
+            }
+
+            // Hàm để xử lý sự kiện khi click nút Delete Post
+            function deletePost(postId) {
+                var confirmDelete = confirm("Are you sure you want to delete this post?");
+                if (confirmDelete) {
+                    alert("Delete Post with ID: " + postId);
+                    // Thêm logic để xóa bài đăng từ cơ sở dữ liệu hoặc API
+                }
+            }
 
             function openMessages() {
                 alert("Redirect to Messages Page");

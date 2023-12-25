@@ -8,7 +8,10 @@ package com.model.dao;
 import com.model.dm.Post;
 import com.utils.JDBCUtil;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Time;
 import java.util.ArrayList;
 
 /**
@@ -66,7 +69,38 @@ public class PostDAO implements I_DAO<Post>{
 
     @Override
     public ArrayList<Post> selectAll() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        ArrayList<Post> res = new ArrayList<>();
+        try {
+            
+            Connection con = JDBCUtil.getConnection();
+            
+            String sql = "SELECT * FROM post";
+            
+            PreparedStatement pst = con.prepareStatement(sql);
+            
+            ResultSet rs = pst.executeQuery();
+            
+            while(rs.next()) {
+                String id = rs.getString("PostId");
+                String content = rs.getString("content");
+                String visibility = rs.getString("visibility");
+                Date postDate = rs.getDate("postDate");
+                Time postTime = rs.getTime("postTime");
+                String file = rs.getString("file");
+                String userId = rs.getString("UserId");
+                
+                Post post = new Post(id, content, visibility, postDate, postTime, file, userId);
+                
+                res.add(post);
+            }
+            JDBCUtil.closeConnection(con);
+            
+        } catch(Exception e) {
+            
+        }
+        return res;
+        
     }
 
     @Override

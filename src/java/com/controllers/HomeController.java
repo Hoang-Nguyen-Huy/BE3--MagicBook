@@ -9,16 +9,19 @@ import com.model.dao.PostDAO;
 import com.model.dao.UserDAO;
 import com.model.dm.Post;
 import com.model.dm.User;
-import com.utils.Validation;
+import com.utils.Util;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Date;
 import java.sql.Time;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -152,6 +155,27 @@ public class HomeController extends HttpServlet {
             String name = user.getFirstName() + " " + user.getLastName();
             req.setAttribute("userName", name);
             req.setAttribute("avatar", user.getAvatar());
+            
+            ArrayList<Post> posts = PostDAO.getInstance().selectAll();
+            HashMap<User, Post> map = new HashMap<>();
+            
+            for (Post p : posts) {
+                map.put(UserDAO.getInstance().selectById(p.getUserId()), p);
+            }
+            
+            Set<User> keyMap = map.keySet();
+            
+            for (User u : keyMap) {
+                u.setUserId(Util.encryptPassword(u.getUserId()));
+            }
+            
+            for (Post p : posts) {
+                p.setPostId(Util.encryptPassword(p.getPostId()));
+                p.setUserId(Util.encryptPassword(p.getUserId()));
+            }
+            
+            req.setAttribute("post", map);
+            
             req.getRequestDispatcher("home.jsp").forward(req, resp);
         } else {
             resp.sendRedirect(req.getContextPath());
