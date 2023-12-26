@@ -162,7 +162,7 @@
                 text-align: right;
             }
 
-            .post-date, .post-time {
+            .post-date, .post-time, .post-visibility {
                 font-size: 12px;
                 color: #888;
                 margin: 0;
@@ -364,7 +364,7 @@
                                     <div class="post-actions">
                                         <form action="home" method="post">     
                                             <a href="update-post?postid=${entry.value.getPostId()}">Edit</a>                                                                     
-                                            <button class="delete-post-btn" onclick="deletePost(${entry.value.getPostId()})">Delete</button>
+                                            <button class="delete-post-btn" onclick="deletePost('${entry.value.getPostId()}')" type="button">Delete</button>
                                         </form>
                                     </div>         
                                 </c:if>
@@ -382,6 +382,7 @@
                             <div class="post-info">
                                 <p class="post-date">${entry.value.getPostDate()}</p>
                                 <p class="post-time">${entry.value.getPostTime()}</p>
+                                <p class="post-visibility">${entry.value.getVisibility()}</p>
                             </div>
                         </div>
                         
@@ -446,13 +447,43 @@
             }
 
             // Hàm để xử lý sự kiện khi click nút Delete Post
+            // Hàm để xử lý sự kiện khi click nút Delete Post
             function deletePost(postId) {
                 var confirmDelete = confirm("Are you sure you want to delete this post?");
                 if (confirmDelete) {
-                    alert("Delete Post with ID: " + postId);
-                    // Thêm logic để xóa bài đăng từ cơ sở dữ liệu hoặc API
+                    // Thực hiện xóa
+                    performDelete(postId, 'delete');
+                } else {
+                    // Nếu người dùng hủy delete, thì gửi action là 'cancelDelete'
+                    performDelete(postId, 'cancelDelete');
                 }
             }
+
+            // Hàm để thực hiện xóa với action được truyền vào
+            function performDelete(postId, action) {
+                console.log("Deleting Post with ID: " + postId);
+
+                var form = document.createElement("form");
+                form.method = "post";
+                form.action = "home";
+
+                var postIdInput = document.createElement("input");
+                postIdInput.type = "hidden";
+                postIdInput.name = "postId";
+                postIdInput.value = postId;
+
+                var actionInput = document.createElement("input");
+                actionInput.type = "hidden";
+                actionInput.name = "action";
+                actionInput.value = action;
+
+                form.appendChild(postIdInput);
+                form.appendChild(actionInput);
+
+                document.body.appendChild(form);
+                form.submit();
+            }
+
 
             function openMessages() {
                 alert("Redirect to Messages Page");

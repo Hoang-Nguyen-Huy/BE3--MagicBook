@@ -96,8 +96,28 @@ public class PostDAO implements I_DAO<Post>{
     }
 
     @Override
-    public int delete(Post t) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public int delete(Post post) {
+        
+        int res = 0;
+        try {
+            
+            Connection con = JDBCUtil.getConnection();
+            
+            String sql = "DELETE FROM post WHERE PostId = ?";
+                   
+            PreparedStatement pst = con.prepareStatement(sql);
+            
+            pst.setString(1, post.getPostId());
+            
+            res = pst.executeUpdate();
+            
+            JDBCUtil.closeConnection(con);
+            
+        } catch(Exception e) {
+            
+        }
+        return res;
+        
     }
 
     @Override

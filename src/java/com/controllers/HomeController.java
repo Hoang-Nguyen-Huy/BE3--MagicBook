@@ -17,11 +17,13 @@ import java.nio.file.Paths;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -124,6 +126,19 @@ public class HomeController extends HttpServlet {
 
         }
 
+        String action = req.getParameter("action");
+        String delPostId = req.getParameter("postId");
+        Post delPost = PostDAO.getInstance().checkIdFromUrl(delPostId);
+
+        if ("delete".equals(action) && delPost != null) {
+            System.out.println(action);
+            System.out.println(delPost.toString());
+            PostDAO.getInstance().delete(delPost);
+        } else if ("cancelDelete".equals(action) && delPost != null) {
+            System.out.println(action);
+            System.out.println(delPost.toString());
+        }
+
         if (post.getContent() != null || post.getFile() != null) {
             System.out.println(post.toString());
             PostDAO.getInstance().insert(post);
@@ -156,26 +171,26 @@ public class HomeController extends HttpServlet {
             String name = user.getFirstName() + " " + user.getLastName();
             req.setAttribute("userName", name);
             req.setAttribute("avatar", user.getAvatar());
-            
+
             ArrayList<Post> posts = PostDAO.getInstance().selectAll();
             HashMap<User, Post> map = new HashMap<>();
-            
+
             for (Post p : posts) {
                 map.put(UserDAO.getInstance().selectById(p.getUserId()), p);
             }
-            
+
             Set<User> keyMap = map.keySet();
-            
+
             for (User u : keyMap) {
                 u.setUserId(Util.encryptPassword(u.getUserId()));
             }
-            
+
             for (Post p : posts) {
                 p.setPostId(Util.encryptPassword(p.getPostId()));
             }
-            
+
             req.setAttribute("post", map);
-            
+
             req.getRequestDispatcher("home.jsp").forward(req, resp);
         } else {
             resp.sendRedirect(req.getContextPath());
