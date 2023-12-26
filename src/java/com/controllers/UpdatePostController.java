@@ -9,20 +9,15 @@ import com.model.dao.PostDAO;
 import com.model.dao.UserDAO;
 import com.model.dm.Post;
 import com.model.dm.User;
-import com.utils.Util;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Date;
 import java.sql.Time;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -35,15 +30,16 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 /**
  *
- * @author Dell Latitude 7490
+ * @author Nguyen Huy Hoang
  */
-public class HomeController extends HttpServlet {
+public class UpdatePostController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         User user = new User();
         String id = ""; // id lay tu cookie
+        String urlPostId = req.getParameter("postid");
         Cookie[] cookies = req.getCookies();
         if (cookies == null) {
             resp.sendRedirect(req.getContextPath());
@@ -55,9 +51,8 @@ public class HomeController extends HttpServlet {
                 user = UserDAO.getInstance().checkAccessToHome(id);
             }
         }
-
+        Post upPost = PostDAO.getInstance().checkIdFromUrl(urlPostId);
         String postFile = "";
-        Post post = new Post();
 
         try {
             DiskFileItemFactory factory = new DiskFileItemFactory();
@@ -79,24 +74,28 @@ public class HomeController extends HttpServlet {
                     String value = item.getString("UTF-8");
                     System.out.println("name: " + name + "value: " + value);
 
-                    if ("postContent".equals(name)) {
+                    if ("content".equals(name)) {
                         if (!value.isEmpty()) {
-                            post.setContent(value.trim());
+                            upPost.setContent(value.trim());
                             System.out.println(value);
                             // de lay thoi gian thuc cua bai dang 
                             Calendar calendar = Calendar.getInstance();
-                            post.setPostDate(new Date(calendar.getTime().getTime()));
-                            post.setPostTime(new Time(calendar.getTime().getTime()));
-                            System.out.println(post.getPostDate());
-                            System.out.println(post.getPostTime());
-                            // lay userId cua nguoi dang
-                            post.setUserId(user.getUserId());
-                            System.out.println(post.getUserId());
+                            upPost.setPostDate(new Date(calendar.getTime().getTime()));
+                            upPost.setPostTime(new Time(calendar.getTime().getTime()));
+                            System.out.println(upPost.getPostDate());
+                            System.out.println(upPost.getPostTime());
+                            System.out.println(upPost.getUserId());
                         }
                     }
                     if ("visibility".equals(item.getFieldName())) {
-                        post.setVisibility(item.getString("UTF-8"));
-                        System.out.println(item.getString("UTF-8"));
+                        if (!value.equals(upPost.getVisibility())) {
+                            upPost.setVisibility(item.getString("UTF-8"));
+                            // de lay thoi gian thuc cua bai dang 
+                            Calendar calendar = Calendar.getInstance();
+                            upPost.setPostDate(new Date(calendar.getTime().getTime()));
+                            upPost.setPostTime(new Time(calendar.getTime().getTime()));
+                            System.out.println(item.getString("UTF-8"));
+                        }
                     }
                 } else {
                     if ("fileInput".equals(item.getFieldName())) {
@@ -109,13 +108,13 @@ public class HomeController extends HttpServlet {
                             File uploadFile = new File(storePath + "/" + path.getFileName());
                             item.write(uploadFile);
                             System.out.println(storePath + "/" + path.getFileName());
-                            post.setFile("postContent\\" + path.getFileName());
+                            upPost.setFile("postContent\\" + path.getFileName());
                             // de lay thoi gian thuc cua bai dang 
                             Calendar calendar = Calendar.getInstance();
-                            post.setPostDate(new Date(calendar.getTime().getTime()));
-                            post.setPostTime(new Time(calendar.getTime().getTime()));
-                            System.out.println(post.getPostDate());
-                            System.out.println(post.getPostTime());
+                            upPost.setPostDate(new Date(calendar.getTime().getTime()));
+                            upPost.setPostTime(new Time(calendar.getTime().getTime()));
+                            System.out.println(upPost.getPostDate());
+                            System.out.println(upPost.getPostTime());
                         }
                     }
                 }
@@ -124,9 +123,9 @@ public class HomeController extends HttpServlet {
 
         }
 
-        if (post.getContent() != null || post.getFile() != null) {
-            System.out.println(post.toString());
-            PostDAO.getInstance().insert(post);
+        if (upPost.getContent() != null) {
+            System.out.println(upPost.toString());
+            PostDAO.getInstance().update(upPost);
             resp.sendRedirect("home");
         } else {
             resp.sendRedirect("home");
@@ -139,6 +138,11 @@ public class HomeController extends HttpServlet {
 
         User user = null;
         String id = "";
+        String urlPostId = req.getParameter("postid");
+        if (urlPostId == null) {
+            resp.sendRedirect("home");
+            return;
+        }
         Cookie[] cookies = req.getCookies();
         if (cookies == null) {
             resp.sendRedirect(req.getContextPath());
@@ -153,30 +157,7 @@ public class HomeController extends HttpServlet {
         }
         if (user != null) {
             req.setAttribute("userId", id);
-            String name = user.getFirstName() + " " + user.getLastName();
-            req.setAttribute("userName", name);
-            req.setAttribute("avatar", user.getAvatar());
-            
-            ArrayList<Post> posts = PostDAO.getInstance().selectAll();
-            HashMap<User, Post> map = new HashMap<>();
-            
-            for (Post p : posts) {
-                map.put(UserDAO.getInstance().selectById(p.getUserId()), p);
-            }
-            
-            Set<User> keyMap = map.keySet();
-            
-            for (User u : keyMap) {
-                u.setUserId(Util.encryptPassword(u.getUserId()));
-            }
-            
-            for (Post p : posts) {
-                p.setPostId(Util.encryptPassword(p.getPostId()));
-            }
-            
-            req.setAttribute("post", map);
-            
-            req.getRequestDispatcher("home.jsp").forward(req, resp);
+            req.getRequestDispatcher("updatePost.jsp").forward(req, resp);
         } else {
             resp.sendRedirect(req.getContextPath());
         }

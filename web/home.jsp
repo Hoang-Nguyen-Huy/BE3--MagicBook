@@ -362,11 +362,11 @@
                                 <!-- Thêm nút Edit và Delete -->
                                 <c:if test="${userId eq entry.key.getUserId()}">
                                     <div class="post-actions">
-                                        <form action="home" method="post">
-                                            <button class="edit-post-btn" onclick="editPost(${entry.value.getPostId()})">Edit</button>
+                                        <form action="home" method="post">     
+                                            <a href="update-post?postid=${entry.value.getPostId()}">Edit</a>                                                                     
                                             <button class="delete-post-btn" onclick="deletePost(${entry.value.getPostId()})">Delete</button>
                                         </form>
-                                    </div>
+                                    </div>         
                                 </c:if>
                             </div>
                         </div>

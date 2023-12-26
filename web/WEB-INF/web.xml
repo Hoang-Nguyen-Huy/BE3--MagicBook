@@ -130,4 +130,13 @@
         <url-pattern>/member-list</url-pattern>
     </servlet-mapping>
     
+    <servlet>
+        <servlet-name>UpdatePostController</servlet-name>
+        <servlet-class>com.controllers.UpdatePostController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UpdatePostController</servlet-name>
+        <url-pattern>/update-post</url-pattern>
+    </servlet-mapping>
+    
 </web-app>

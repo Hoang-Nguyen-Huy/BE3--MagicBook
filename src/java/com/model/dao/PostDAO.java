@@ -7,6 +7,7 @@ package com.model.dao;
 
 import com.model.dm.Post;
 import com.utils.JDBCUtil;
+import com.utils.Util;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -58,8 +59,40 @@ public class PostDAO implements I_DAO<Post>{
     }
 
     @Override
-    public int update(Post t) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public int update(Post post) {
+        
+        int res = 0;
+        try {
+            
+            Connection con = JDBCUtil.getConnection();
+            
+            String sql = "UPDATE post"
+                    + " SET "
+                    + "content = ?"
+                    + ", visibility = ?"
+                    + ", postDate = ?"
+                    + ", postTime = ?"
+                    + ", file = ?"
+                    + " WHERE PostId = ?";
+            
+            PreparedStatement pst = con.prepareStatement(sql);
+            
+            pst.setString(1, post.getContent());
+            pst.setString(2, post.getVisibility());
+            pst.setDate(3, post.getPostDate());
+            pst.setTime(4, post.getPostTime());
+            pst.setString(5, post.getFile());
+            pst.setString(6, post.getPostId());
+            
+            res = pst.executeUpdate();
+            
+            JDBCUtil.closeConnection(con);
+            
+        } catch(Exception e) {
+            
+        }
+        return res;
+        
     }
 
     @Override
@@ -111,6 +144,20 @@ public class PostDAO implements I_DAO<Post>{
     @Override
     public ArrayList<Post> selectByCondition(String condition) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    public Post checkIdFromUrl(String id) {
+        
+        ArrayList<Post> check = selectAll();
+        Post res = new Post();
+        for (Post p : check) {
+            if (Util.encryptPassword(p.getPostId()).equals(id)) {
+                res = p;
+                break;
+            }
+        }
+        return res;
+        
     }
     
 }
