@@ -84,6 +84,30 @@ public class LikeDAO implements I_DAO<Like> {
         return res;
         
     }
+    
+    public int deleteByPostId(String postId) {
+        
+        int res = 0;
+        try {
+            
+            Connection con = JDBCUtil.getConnection();
+            
+            String sql = "DELETE FROM likepost WHERE PostId = ?";
+            
+            PreparedStatement pst = con.prepareStatement(sql);
+            
+            pst.setString(1, postId);
+            
+            res = pst.executeUpdate();
+            
+            JDBCUtil.closeConnection(con);
+            
+        } catch(Exception e) {
+            
+        }
+        return res;
+        
+    }
 
     @Override
     public ArrayList<Like> selectAll() {

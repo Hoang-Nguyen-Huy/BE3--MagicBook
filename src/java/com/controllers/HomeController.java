@@ -126,28 +126,31 @@ public class HomeController extends HttpServlet {
         }
 
         // like post-----------------
-        String likePostId = req.getParameter("postId");
+        String likePostId = req.getParameter("likedpostId");
         System.out.println(likePostId);
-        Post likedPost = PostDAO.getInstance().checkIdFromUrl(likePostId);
-        Like likeStatus = LikeDAO.getInstance().checkLikeStatus(user.getUserId(), likedPost.getPostId());
-        if (likeStatus != null) { // neu da like roi thi huy like
-            LikeDAO.getInstance().delete(likeStatus);
-            System.out.println("da huy like");
-        } else {
-            Like newLike = new Like();
-            // de lay thoi gian thuc cua bai dang 
-            Calendar calendar = Calendar.getInstance();
-            newLike.setLikeDate(new Date(calendar.getTime().getTime()));
-            newLike.setLikeTime(new Time(calendar.getTime().getTime()));
-            System.out.println(newLike.getLikeDate());
-            System.out.println(newLike.getLikeTime());
+        if (likePostId != null) {
+            Post likedPost = PostDAO.getInstance().checkIdFromUrl(likePostId);
+            Like likeStatus = LikeDAO.getInstance().checkLikeStatus(user.getUserId(), likedPost.getPostId());
 
-            newLike.setUserId(user.getUserId());
-            newLike.setPostId(likedPost.getPostId());
+            if (likeStatus != null) { // neu da like roi thi huy like
+                LikeDAO.getInstance().delete(likeStatus);
+                System.out.println("da huy like");
+            } else {
+                Like newLike = new Like();
+                // de lay thoi gian thuc cua bai dang 
+                Calendar calendar = Calendar.getInstance();
+                newLike.setLikeDate(new Date(calendar.getTime().getTime()));
+                newLike.setLikeTime(new Time(calendar.getTime().getTime()));
+                System.out.println(newLike.getLikeDate());
+                System.out.println(newLike.getLikeTime());
 
-            LikeDAO.getInstance().insert(newLike);
-            
-            System.out.println("dalike");
+                newLike.setUserId(user.getUserId());
+                newLike.setPostId(likedPost.getPostId());
+
+                LikeDAO.getInstance().insert(newLike);
+
+                System.out.println("dalike");
+            }
         }
         //---------------------------
 
@@ -157,9 +160,10 @@ public class HomeController extends HttpServlet {
         Post delPost = PostDAO.getInstance().checkIdFromUrl(delPostId);
 
         if ("delete".equals(action) && delPost != null) {
-            System.out.println(action);
             System.out.println(delPost.toString());
+            LikeDAO.getInstance().deleteByPostId(delPost.getPostId());
             PostDAO.getInstance().delete(delPost);
+            System.out.println(action);
         } else if ("cancelDelete".equals(action) && delPost != null) {
             System.out.println(action);
             System.out.println(delPost.toString());
@@ -221,7 +225,7 @@ public class HomeController extends HttpServlet {
 
             req.setAttribute("post", map);
             // -----------------------
-            
+
             req.getRequestDispatcher("home.jsp").forward(req, resp);
         } else {
             resp.sendRedirect(req.getContextPath());

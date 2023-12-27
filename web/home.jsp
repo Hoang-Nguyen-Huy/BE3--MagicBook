@@ -436,7 +436,7 @@
                 xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
                 // Tạo dữ liệu cần gửi đi
-                var data = "postId=" + encodeURIComponent(postId);
+                var data = "likedpostId=" + encodeURIComponent(postId);
 
                 xhr.onreadystatechange = function () {
                     if (xhr.readyState == 4 && xhr.status == 200) {
