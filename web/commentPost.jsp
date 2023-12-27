@@ -1,6 +1,6 @@
 <%-- 
-    Document   : home
-    Created on : Dec 12, 2023, 11:34:19 AM
+    Document   : commentPost
+    Created on : Dec 27, 2023, 11:54:42 AM
     Author     : Dell Latitude 7490
 --%>
 
@@ -217,7 +217,46 @@
             .post-form button:hover {
                 background-color: #345291;
             }
+            
+            .comment {
+                width: 40%;
+                margin: auto;
+                background-color: white;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+                position: relative; /* Để có thể định vị phần info */
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            #commentsContainer {
+                width: 60%;
+                position: relative;
+                display: flex;
+                flex-direction: column;
+            }
+            
+            .comment-avatar {
+                display: flex;
+                align-items: flex-start;
+                position: relative;
+            }
+            
+            .comment-header {
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 10px;
+            }
 
+            .comment-avatar-header-wrapper {
+                display: flex;
+                align-items: center; /* Căn giữa theo chiều dọc */
+            }
+            
             .side-buttons {
                 width: 20%;
                 display: flex;
@@ -336,37 +375,18 @@
         </header>
 
         <main>
-            <form action="home" method="post" enctype="multipart/form-data">
-                <div class="post-form">
-                    <label>
-                        <input type="radio" name="visibility" value="public" checked> Public
-                    </label>
-                    <label>
-                        <input type="radio" name="visibility" value="friend"> Friends
-                    </label>
-                    <label>
-                        <input type="radio" name="visibility" value="onlyme"> Only Me
-                    </label>
-                    <textarea id="postContent" name="postContent" placeholder="What's on your mind?" rows="6"></textarea>
-                    <input type="file" id="fileInput" name="fileInput" accept="image/*, video/*">
-                    
-                    <button type="submit">Post</button>
-                </div>
-            </form>
             
-            <div id="postsContainer">
-                <h2>Recent Posts</h2>      
-                <c:forEach var="entry" items="${post}">
+            <div id="postsContainer">     
                     <div class="post">
                         <div class="post-avatar">
                             <div class="avatar-wrapper">
-                                <img src="${entry.key.getAvatar()}" width="35" height="40" alt="Avatar">
+                                <img src="${creator.getAvatar()}" width="35" height="40" alt="Avatar">
                                 <!-- Thêm nút Edit và Delete -->
-                                <c:if test="${userId eq entry.key.getUserId()}">
+                                <c:if test="${userId eq creator.getUserId()}">
                                     <div class="post-actions">
                                         <form action="home" method="post">     
-                                            <a href="update-post?postid=${entry.value.getPostId()}">Edit</a>                                                                     
-                                            <button class="delete-post-btn" onclick="deletePost('${entry.value.getPostId()}')" type="button">Delete</button>
+                                            <a href="update-post?postid=${cmtPost.getPostId()}">Edit</a>                                                                     
+                                            <button class="delete-post-btn" onclick="deletePost('${cmtPost.getPostId()}')" type="button">Delete</button>
                                         </form>
                                     </div>         
                                 </c:if>
@@ -375,58 +395,89 @@
                             
                        <div class="post-header">
                             <h3>
-                                <a href="profile?id=${entry.key.getUserId()}">
-                                    <c:out value="${entry.key.getFirstName()} ${entry.key.getLastName()}"/>
+                                <a href="profile?id=${creator.getUserId()}">
+                                    <c:out value="${creator.getFirstName()} ${creator.getLastName()}"/>
                                 </a>
                             </h3>
 
                              <!-- Hiển thị thông tin ngày và giờ bài đăng -->
                             <div class="post-info">
-                                <p class="post-date">${entry.value.getPostDate()}</p>
-                                <p class="post-time">${entry.value.getPostTime()}</p>
-                                <p class="post-visibility">${entry.value.getVisibility()}</p>
+                                <p class="post-date">${cmtPost.getPostDate()}</p>
+                                <p class="post-time">${cmtPost.getPostTime()}</p>
+                                <p class="post-visibility">${cmtPost.getVisibility()}</p>
                             </div>
                         </div>
                         
-                        <p><c:out value="${entry.value.getContent()}"/></p>
+                        <p><c:out value="${cmtPost.getContent()}"/></p>
                         
                         <c:choose>
-                            <c:when test="${entry.value.getFile() != null}">
-                                <c:set var="fileName" value="${entry.value.getFile()}" />
+                            <c:when test="${cmtPost.getFile() != null}">
+                                <c:set var="fileName" value="${cmtPost.getFile()}" />
                                 <c:set var="lowercaseFileName" value="${fn:toLowerCase(fileName)}" />
 
                                 <c:choose>
                                     <c:when test="${lowercaseFileName.endsWith('.mp4') or lowercaseFileName.endsWith('.mp3') or lowercaseFileName.endsWith('.mov')}">
                                         <!-- Nếu là video -->
                                         <video width="320" height="400" controls>
-                                            <source src="${entry.value.getFile()}" type="video/${lowercaseFileName.substring(lowercaseFileName.lastIndexOf('.') + 1)}">
+                                            <source src="${cmtPost.getFile()}" type="video/${lowercaseFileName.substring(lowercaseFileName.lastIndexOf('.') + 1)}">
                                             Your browser does not support the video tag.
                                         </video>
                                     </c:when>
                                     <c:otherwise>
                                         <!-- Nếu là hình ảnh -->
-                                        <img src="${entry.value.getFile()}" alt="Image Description" width="320" height="400">
+                                        <img src="${cmtPost.getFile()}" alt="Image Description" width="320" height="400">
                                     </c:otherwise>
                                 </c:choose>
                             </c:when>
                         </c:choose>
                         <div class="post-actions">
                             <!-- Nút Like -->
-                            <button class="like-btn" onclick="likePost('${entry.value.getPostId()}')">
-                                Like <span class="like-count"><c:out value="${LikeDAO.getInstance().countLike(entry.value.getPostId())}" /></span>
+                            <button class="like-btn" onclick="likePost('${cmtPost.getPostId()}')">
+                                Like <span class="like-count"><c:out value="${LikeDAO.getInstance().countLike(cmtPost.getPostId())}" /></span>
                             </button>
-
-                            <!-- Nút Comment -->
-                            <a class="comment-btn" href="comment-post?postid=${entry.value.getPostId()}">
-                                Comment <span class="comment-count"><c:out value="${CommentDAO.getInstance().countComment(entry.value.getPostId())}" /></span>
-                            </a>
-
+                            
+                            <form method="post">
+                                <div class="post-form">
+                                    <label for="comment">Add a comment:</label>
+                                    <textarea id="comment" name="comment" rows="4" placeholder="Write your comment here..."></textarea>
+                                    <button type="submit">Comment</button>
+                                </div> 
+                            </form>
+                            
                         </div>
-                    </div>                      
+                            
+                    </div>                           
+                        <hr>                      
+            </div>
+                            
+            <!-- cac comment khac --> 
+            <div id="commentsContainer">
+                <h3>Recent Comments</h3>
+                <c:forEach var="entry" items="${cmt}">
+                    <div class="comment">
+                        <div class="comment-avatar-header-wrapper">
+                            <div class="comment-avatar">
+                                <img src="${entry.key.getAvatar()}" width="20" height="30" alt="Avatar">
+                            </div>
+
+                            <div class="comment-header">
+                                <h5>
+                                    <a href="profile?id=${entry.key.getUserId()}">
+                                        <c:out value="${entry.key.getFirstName()} ${entry.key.getLastName()}"/>
+                                    </a>
+                                </h5>
+                            </div>
+                        </div>
+                        
+                        <p><c:out value="${entry.value.getContent()}"/></p>
+                                                
+                    </div>
                         <hr>
                 </c:forEach>
-            </div>
-            
+                
+            </div>   
+            <!-- -->                
+               
         </main>
 
         <script>
@@ -452,12 +503,6 @@
                 xhr.send(data);
             }
 
-
-            // Hàm để xử lý sự kiện khi click nút Comment
-            function commentOnPost(postId) {
-                alert("Commented on Post with ID: " + postId);
-                // Thêm logic để chuyển người dùng đến trang comment tương ứng hoặc hiển thị form comment ngay trên giao diện
-            }
             
               // Hàm để xử lý sự kiện khi click nút Edit Post
             function editPost(postId) {

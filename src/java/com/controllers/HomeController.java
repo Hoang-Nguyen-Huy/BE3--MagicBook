@@ -5,6 +5,7 @@
  */
 package com.controllers;
 
+import com.model.dao.CommentDAO;
 import com.model.dao.LikeDAO;
 import com.model.dao.PostDAO;
 import com.model.dao.UserDAO;
@@ -162,6 +163,7 @@ public class HomeController extends HttpServlet {
         if ("delete".equals(action) && delPost != null) {
             System.out.println(delPost.toString());
             LikeDAO.getInstance().deleteByPostId(delPost.getPostId());
+            CommentDAO.getInstance().deleteByPostId(delPost.getPostId());
             PostDAO.getInstance().delete(delPost);
             System.out.println(action);
         } else if ("cancelDelete".equals(action) && delPost != null) {

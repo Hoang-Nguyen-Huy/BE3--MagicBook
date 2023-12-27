@@ -5,6 +5,7 @@
 --%>
 
 <%@ page import="com.model.dao.LikeDAO" %>
+<%@ page import="com.model.dao.CommentDAO" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -416,9 +417,10 @@
                             </button>
 
                             <!-- Nút Comment -->
-                            <button class="comment-btn" onclick="commentOnPost(${entry.value.getPostId()})">
-                                Comment
-                            </button>
+                            <a class="comment-btn" href="comment-post?postid=${entry.value.getPostId()}">
+                                Comment <span class="comment-count"><c:out value="${CommentDAO.getInstance().countComment(entry.value.getPostId())}" /></span>
+                            </a>
+
                         </div>
                     </div>                      
                         <hr>

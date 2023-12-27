@@ -139,4 +139,13 @@
         <url-pattern>/update-post</url-pattern>
     </servlet-mapping>
     
+    <servlet>
+        <servlet-name>CommentController</servlet-name>
+        <servlet-class>com.controllers.CommentController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CommentController</servlet-name>
+        <url-pattern>/comment-post</url-pattern>
+    </servlet-mapping>
+    
 </web-app>

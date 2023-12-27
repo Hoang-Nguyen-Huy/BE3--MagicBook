@@ -65,6 +65,10 @@ public class ProfileController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         String userId = req.getParameter("id"); //id tu url
+        if (userId == null || userId.equals("")) {
+            resp.sendRedirect("home");
+            return;
+        }
         User user = null;
         String id = "";  //id cua cookie
         Cookie[] cookies = req.getCookies();
