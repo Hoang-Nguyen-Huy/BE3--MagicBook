@@ -4,6 +4,7 @@
     Author     : Dell Latitude 7490
 --%>
 
+<%@ page import="com.model.dao.LikeDAO" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -410,8 +411,8 @@
                         </c:choose>
                         <div class="post-actions">
                             <!-- Nút Like -->
-                            <button class="like-btn" onclick="likePost(${entry.value.getPostId()})">
-                                Like
+                            <button class="like-btn" onclick="likePost('${entry.value.getPostId()}')">
+                                Like <span class="like-count"><c:out value="${LikeDAO.getInstance().countLike(entry.value.getPostId())}" /></span>
                             </button>
 
                             <!-- Nút Comment -->
@@ -430,9 +431,25 @@
             
              // Hàm để xử lý sự kiện khi click nút Like
             function likePost(postId) {
-                alert("Liked Post with ID: " + postId);
-                // Thêm logic để thực hiện hành động "Like" và cập nhật trạng thái trên giao diện
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "home", true);
+                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+                // Tạo dữ liệu cần gửi đi
+                var data = "postId=" + encodeURIComponent(postId);
+
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        // Xử lý phản hồi từ máy chủ nếu cần
+                        console.log(xhr.responseText);
+                        // Thêm logic để cập nhật trạng thái trên giao diện (nếu cần)
+                    }
+                };
+
+                // Gửi yêu cầu
+                xhr.send(data);
             }
+
 
             // Hàm để xử lý sự kiện khi click nút Comment
             function commentOnPost(postId) {

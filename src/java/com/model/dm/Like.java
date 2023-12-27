@@ -31,6 +31,13 @@ public class Like {
         this.UserId = UserId;
     }
 
+    public Like(Date likeDate, Time likeTime, String PostId, String UserId) {
+        this.likeDate = likeDate;
+        this.likeTime = likeTime;
+        this.PostId = PostId;
+        this.UserId = UserId;
+    }
+    
     public String getLikeId() {
         return LikeId;
     }

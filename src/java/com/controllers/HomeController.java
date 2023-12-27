@@ -5,8 +5,10 @@
  */
 package com.controllers;
 
+import com.model.dao.LikeDAO;
 import com.model.dao.PostDAO;
 import com.model.dao.UserDAO;
+import com.model.dm.Like;
 import com.model.dm.Post;
 import com.model.dm.User;
 import com.utils.Util;
@@ -17,13 +19,10 @@ import java.nio.file.Paths;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -126,6 +125,33 @@ public class HomeController extends HttpServlet {
 
         }
 
+        // like post-----------------
+        String likePostId = req.getParameter("postId");
+        System.out.println(likePostId);
+        Post likedPost = PostDAO.getInstance().checkIdFromUrl(likePostId);
+        Like likeStatus = LikeDAO.getInstance().checkLikeStatus(user.getUserId(), likedPost.getPostId());
+        if (likeStatus != null) { // neu da like roi thi huy like
+            LikeDAO.getInstance().delete(likeStatus);
+            System.out.println("da huy like");
+        } else {
+            Like newLike = new Like();
+            // de lay thoi gian thuc cua bai dang 
+            Calendar calendar = Calendar.getInstance();
+            newLike.setLikeDate(new Date(calendar.getTime().getTime()));
+            newLike.setLikeTime(new Time(calendar.getTime().getTime()));
+            System.out.println(newLike.getLikeDate());
+            System.out.println(newLike.getLikeTime());
+
+            newLike.setUserId(user.getUserId());
+            newLike.setPostId(likedPost.getPostId());
+
+            LikeDAO.getInstance().insert(newLike);
+            
+            System.out.println("dalike");
+        }
+        //---------------------------
+
+        //delete post --------------------
         String action = req.getParameter("action");
         String delPostId = req.getParameter("postId");
         Post delPost = PostDAO.getInstance().checkIdFromUrl(delPostId);
@@ -138,7 +164,9 @@ public class HomeController extends HttpServlet {
             System.out.println(action);
             System.out.println(delPost.toString());
         }
+        //------------------------
 
+        // up Post -----------------
         if (post.getContent() != null || post.getFile() != null) {
             System.out.println(post.toString());
             PostDAO.getInstance().insert(post);
@@ -146,6 +174,7 @@ public class HomeController extends HttpServlet {
         } else {
             resp.sendRedirect("home");
         }
+        //-----------------------
 
     }
 
@@ -172,6 +201,7 @@ public class HomeController extends HttpServlet {
             req.setAttribute("userName", name);
             req.setAttribute("avatar", user.getAvatar());
 
+            // dang post
             ArrayList<Post> posts = PostDAO.getInstance().selectAll();
             HashMap<User, Post> map = new HashMap<>();
 
@@ -190,7 +220,8 @@ public class HomeController extends HttpServlet {
             }
 
             req.setAttribute("post", map);
-
+            // -----------------------
+            
             req.getRequestDispatcher("home.jsp").forward(req, resp);
         } else {
             resp.sendRedirect(req.getContextPath());
