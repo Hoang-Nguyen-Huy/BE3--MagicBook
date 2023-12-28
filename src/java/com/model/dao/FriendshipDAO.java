@@ -168,8 +168,8 @@ public class FriendshipDAO implements I_DAO<Friendship> {
             Connection con = JDBCUtil.getConnection();
             
             String sql = "SELECT * FROM Friendship"
-                    + " WHERE (UserId = ? AND receiverId = ?)"
-                    + " OR (UserId = ? AND receiverId = ?)";
+                    + " WHERE (UserId = ? AND receiverId = ? AND status = 'Accepted')"
+                    + " OR (UserId = ? AND receiverId = ? AND status = 'Accepted')";
             
             PreparedStatement pst = con.prepareStatement(sql);
             

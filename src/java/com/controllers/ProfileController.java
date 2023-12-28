@@ -53,10 +53,10 @@ public class ProfileController extends HttpServlet {
                 break;
             }
         }
-        
+
         String postFile = "";
         Post post = new Post();
-        
+
         try {
             DiskFileItemFactory factory = new DiskFileItemFactory();
 
@@ -152,7 +152,7 @@ public class ProfileController extends HttpServlet {
             resp.sendRedirect("profile?id=" + userId);
         }
         //-----------------------
-        
+
     }
 
     @Override
@@ -261,6 +261,28 @@ public class ProfileController extends HttpServlet {
                     String sex = u.getSex();
                     req.setAttribute("gender", sex);
                     req.setAttribute("avatar", u.getAvatar());
+
+                    // hien thi cac bai post da dang
+                    ArrayList<Post> posts = PostDAO.getInstance().selectByUserId(u.getUserId());
+                    HashMap<User, Post> map = new HashMap<>();
+
+                    for (Post p : posts) {
+                        map.put(UserDAO.getInstance().selectById(p.getUserId()), p);
+                    }
+
+                    Set<User> keyMap = map.keySet();
+
+                    for (User u1 : keyMap) {
+                        u1.setUserId(Util.encryptPassword(u1.getUserId()));
+                    }
+
+                    for (Post p : posts) {
+                        p.setPostId(Util.encryptPassword(p.getPostId()));
+                    }
+
+                    req.setAttribute("post", map);
+                    //------------------------------
+
                     req.getRequestDispatcher("profile.jsp").forward(req, resp);
                 }
             }
