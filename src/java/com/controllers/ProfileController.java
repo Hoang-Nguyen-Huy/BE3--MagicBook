@@ -6,12 +6,16 @@
 package com.controllers;
 
 import com.model.dao.FriendshipDAO;
+import com.model.dao.PostDAO;
 import com.model.dao.UserDAO;
 import com.model.dm.Friendship;
+import com.model.dm.Post;
 import com.model.dm.User;
 import com.utils.Util;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Set;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
@@ -72,7 +76,7 @@ public class ProfileController extends HttpServlet {
         User user = null;
         String id = "";  //id cua cookie
         Cookie[] cookies = req.getCookies();
-        if(cookies == null) {
+        if (cookies == null) {
             resp.sendRedirect(req.getContextPath());
             return;
         }
@@ -108,6 +112,28 @@ public class ProfileController extends HttpServlet {
                 String sex = user.getSex();
                 req.setAttribute("gender", sex);
                 req.setAttribute("avatar", user.getAvatar());
+
+                // hien thi cac bai post da dang
+                ArrayList<Post> posts = PostDAO.getInstance().selectByUserId(user.getUserId());
+                HashMap<User, Post> map = new HashMap<>();
+
+                for (Post p : posts) {
+                    map.put(UserDAO.getInstance().selectById(p.getUserId()), p);
+                }
+
+                Set<User> keyMap = map.keySet();
+
+                for (User u : keyMap) {
+                    u.setUserId(Util.encryptPassword(u.getUserId()));
+                }
+
+                for (Post p : posts) {
+                    p.setPostId(Util.encryptPassword(p.getPostId()));
+                }
+
+                req.setAttribute("post", map);
+                //------------------------------
+
                 req.getRequestDispatcher("profile.jsp").forward(req, resp);
             } else {
                 resp.sendRedirect(req.getContextPath());

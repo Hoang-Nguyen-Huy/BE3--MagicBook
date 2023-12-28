@@ -4,7 +4,11 @@
     Author     : Dell Latitude 7490
 --%>
 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page import="com.model.dao.FriendshipDAO" %>
+<%@ page import="com.model.dao.LikeDAO" %>
+<%@ page import="com.model.dao.CommentDAO" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -107,11 +111,76 @@
             }
 
             .post {
+                width: 40%;
+                margin: auto;
                 background-color: white;
                 padding: 20px;
-                margin-bottom: 20px;
                 border-radius: 8px;
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+                position: relative; /* Để có thể định vị phần info */
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .post-avatar {
+                display: flex;
+                align-items: flex-start;
+                position: relative;
+            }
+            
+            .avatar-wrapper {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-right: 10px; /* Tùy chỉnh khoảng cách giữa avatar và nút */
+            }
+            
+            .post-actions {
+                position: relative;
+            }
+            
+            .edit-post-btn,
+            .delete-post-btn {
+                background-color: #4267b2;
+                color: white;
+                padding: 6px;
+                font-size: 12px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                margin-right: 5px;
+                transition: background-color 0.3s ease;
+            }
+            
+            .edit-post-btn:hover,
+            .delete-post-btn:hover {
+                background-color: #345291;
+            }
+            
+            .post-info {
+                position: absolute;
+                top: 0;
+                right: 0;
+                text-align: right;
+            }
+            
+            .post-header {
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 10px;
+            }
+            
+            .post-info {
+                text-align: right;
+            }
+
+            .post-date, .post-time, .post-visibility {
+                font-size: 12px;
+                color: #888;
+                margin: 0;
             }
 
             .post-form {
@@ -333,6 +402,76 @@
                     <input type="file" id="fileInput" accept="image/*, video/*">
                     <button onclick="submitPost()">Post</button>
                 </div>
+                <div id="postsContainer">
+                    <h2>Recent Posts</h2>
+                    <c:forEach var="entry" items="${post}">
+                        <div class="post">
+                                <div class="post-avatar">
+                                    <div class="avatar-wrapper">
+                                        <img src="${entry.key.getAvatar()}" width="35" height="40" alt="Avatar">
+                                        <!-- Thêm nút Edit và Delete -->
+                                        <div class="post-actions">
+                                            <form action="home" method="post">     
+                                                <a href="update-post?postid=${entry.value.getPostId()}">Edit</a>                                                                     
+                                                <button class="delete-post-btn" onclick="deletePost('${entry.value.getPostId()}')" type="button">Delete</button>
+                                            </form>
+                                        </div>         
+                                    </div>
+                                </div>
+
+                               <div class="post-header">
+                                    <h3>
+                                        <a href="profile?id=${entry.key.getUserId()}">
+                                            <c:out value="${entry.key.getFirstName()} ${entry.key.getLastName()}"/>
+                                        </a>
+                                    </h3>
+
+                                     <!-- Hiển thị thông tin ngày và giờ bài đăng -->
+                                    <div class="post-info">
+                                        <p class="post-date">${entry.value.getPostDate()}</p>
+                                        <p class="post-time">${entry.value.getPostTime()}</p>
+                                        <p class="post-visibility">${entry.value.getVisibility()}</p>
+                                    </div>
+                                </div>
+
+                                <p><c:out value="${entry.value.getContent()}"/></p>
+
+                                <c:choose>
+                                    <c:when test="${entry.value.getFile() != null}">
+                                        <c:set var="fileName" value="${entry.value.getFile()}" />
+                                        <c:set var="lowercaseFileName" value="${fn:toLowerCase(fileName)}" />
+
+                                        <c:choose>
+                                            <c:when test="${lowercaseFileName.endsWith('.mp4') or lowercaseFileName.endsWith('.mp3') or lowercaseFileName.endsWith('.mov')}">
+                                                <!-- Nếu là video -->
+                                                <video width="320" height="400" controls>
+                                                    <source src="${entry.value.getFile()}" type="video/${lowercaseFileName.substring(lowercaseFileName.lastIndexOf('.') + 1)}">
+                                                    Your browser does not support the video tag.
+                                                </video>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <!-- Nếu là hình ảnh -->
+                                                <img src="${entry.value.getFile()}" alt="Image Description" width="320" height="400">
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </c:when>
+                                </c:choose>
+                                <div class="post-actions">
+                                    <!-- Nút Like -->
+                                    <button class="like-btn" onclick="likePost('${entry.value.getPostId()}')">
+                                        Like <span class="like-count"><c:out value="${LikeDAO.getInstance().countLike(entry.value.getPostId())}" /></span>
+                                    </button>
+
+                                    <!-- Nút Comment -->
+                                    <a class="comment-btn" href="comment-post?postid=${entry.value.getPostId()}">
+                                        Comment <span class="comment-count"><c:out value="${CommentDAO.getInstance().countComment(entry.value.getPostId())}" /></span>
+                                    </a>
+
+                                </div>
+                            </div>
+                                    <hr>    
+                    </c:forEach>
+                </div>
             </c:when>
             <c:otherwise>
                 <c:choose>
@@ -369,17 +508,67 @@
             </c:otherwise>
         </c:choose>
        
-        <div id="postsContainer">
-            <h2>Recent Posts</h2>
-            <div class="post">
-                <h3>User Name</h3>
-                <p>This is a sample post....</p>
-            <div>
-            <!-- Additional posts go here -->
-        </div>
     </main>
 
     <script>
+        
+         // Hàm để xử lý sự kiện khi click nút Like
+            function likePost(postId) {
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "home", true);
+                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+                // Tạo dữ liệu cần gửi đi
+                var data = "likedpostId=" + encodeURIComponent(postId);
+
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        // Xử lý phản hồi từ máy chủ nếu cần
+                        console.log(xhr.responseText);
+                        // Thêm logic để cập nhật trạng thái trên giao diện (nếu cần)
+                    }
+                };
+
+                // Gửi yêu cầu
+                xhr.send(data);
+            }
+            
+            // Hàm để xử lý sự kiện khi click nút Delete Post
+            function deletePost(postId) {
+                var confirmDelete = confirm("Are you sure you want to delete this post?");
+                if (confirmDelete) {
+                    // Thực hiện xóa
+                    performDelete(postId, 'delete');
+                } else {
+                    // Nếu người dùng hủy delete, thì gửi action là 'cancelDelete'
+                    performDelete(postId, 'cancelDelete');
+                }
+            }
+
+            // Hàm để thực hiện xóa với action được truyền vào
+            function performDelete(postId, action) {
+                console.log("Deleting Post with ID: " + postId);
+
+                var form = document.createElement("form");
+                form.method = "post";
+                form.action = "home";
+
+                var postIdInput = document.createElement("input");
+                postIdInput.type = "hidden";
+                postIdInput.name = "postId";
+                postIdInput.value = postId;
+
+                var actionInput = document.createElement("input");
+                actionInput.type = "hidden";
+                actionInput.name = "action";
+                actionInput.value = action;
+
+                form.appendChild(postIdInput);
+                form.appendChild(actionInput);
+
+                document.body.appendChild(form);
+                form.submit();
+            }
         <c:choose>
             <c:when test="${!account}">
                 function submitForm(event) {
