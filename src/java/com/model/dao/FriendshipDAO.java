@@ -6,6 +6,7 @@
 package com.model.dao;
 
 import com.model.dm.Friendship;
+import com.model.dm.User;
 import com.utils.JDBCUtil;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -149,6 +150,46 @@ public class FriendshipDAO implements I_DAO<Friendship> {
                 String user = rs.getString("UserId");
                 
                 res = new Friendship(friendshipId, status, user, receiver);
+            }
+            JDBCUtil.closeConnection(con);
+            
+        } catch (Exception e) {
+            
+        }
+        return res;
+        
+    }
+    
+    public Friendship isFriend(String userId, String receiverId) {
+        
+        Friendship res = null;
+        try {
+            
+            Connection con = JDBCUtil.getConnection();
+            
+            String sql = "SELECT * FROM Friendship"
+                    + " WHERE (UserId = ? AND receiverId = ?)"
+                    + " OR (UserId = ? AND receiverId = ?)";
+            
+            PreparedStatement pst = con.prepareStatement(sql);
+            
+            User user = UserDAO.getInstance().checkAccessToHome(userId);
+            User receiver = UserDAO.getInstance().checkAccessToHome(receiverId);
+            
+            pst.setString(1, user.getUserId());
+            pst.setString(2, receiver.getUserId());
+            pst.setString(3, receiver.getUserId());
+            pst.setString(4, user.getUserId());  
+            
+            ResultSet rs = pst.executeQuery();
+            
+            while(rs.next()) {
+                String friendshipId = rs.getString("FriendshipId");
+                String status = rs.getString("status");
+                String receiverID = rs.getString("receiverId");
+                String userID = rs.getString("UserId");
+                
+                res = new Friendship(friendshipId, status, userID, receiverID);
             }
             JDBCUtil.closeConnection(con);
             
