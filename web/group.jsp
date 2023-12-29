@@ -115,19 +115,51 @@
             }
 
             .post-form {
-                width: 30%;
-                display: flex;
-                flex-direction: column;
-                align-items: flex-start;
+                width: 100%; /* Tăng độ rộng của post form */
+                margin: auto; /* Để căn giữa post form */
+                background-color: #fff; /* Màu nền của post form */
+                padding: 20px; /* Khoảng cách giữa các phần tử trong post form */
+                border-radius: 8px; /* Bo tròn góc */
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); /* Đổ bóng */
+                position: relative;
             }
 
+            .post-form label {
+                display: flex;
+                align-items: center;
+                margin-bottom: 10px;
+            }
+            
             .post-form textarea {
                 width: 100%;
+                margin-bottom: 10px;
+                padding: 10px;
+                resize: vertical;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                transition: border-color 0.3s ease;
+            }
+            
+            .post-form input[type="file"] {
                 margin-bottom: 10px;
             }
 
             .post-form button {
-                align-self: flex-end;
+                background-color: #4267b2;
+                color: white;
+                padding: 12px;
+                font-size: 16px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+                position: absolute; /* Đặt vị trí tuyệt đối */
+                bottom: 10px; /* Duyệt phần dưới cùng của post form */
+                right: 10px; /* Đặt nút "Post" về phía bên phải */
+            }
+            
+            .post-form button:hover {
+                background-color: #345291;
             }
 
             .side-buttons {
@@ -322,11 +354,14 @@
                             </a>
                         </button>                          
                     </div> 
-                    <div class="post-form">
-                        <textarea id="postContent" placeholder="What's on your mind?" rows="4"></textarea>
-                        <input type="file" id="fileInput" accept="image/*, video/*">
-                        <button onclick="submitPost()">Post</button>
-                    </div>
+                    <form action="group?groupid=${groupId}" method="post" enctype="multipart/form-data">
+                        <div class="post-form">
+                            <textarea id="postContent" name="postContent" placeholder="What's on your mind?" rows="6"></textarea>
+                            <input type="file" id="fileInput" name="fileInput" accept="image/*, video/*">
+
+                            <button type="submit">Post</button>
+                        </div>
+                    </form>
                 </c:when>
                 <c:otherwise>
                     <c:choose>
