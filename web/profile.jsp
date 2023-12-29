@@ -421,7 +421,13 @@
                 <a href="owned-group?id=${userId}">
                     Owned Group
                 </a> 
-            </button>         
+            </button> 
+                    
+            <button class="owned-group-button">
+                <a href="joined-group?id=${userId}">
+                    Joined Group List
+                </a> 
+            </button>        
         </div>
                      
         <c:choose>

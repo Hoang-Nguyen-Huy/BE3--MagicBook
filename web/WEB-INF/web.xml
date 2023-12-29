@@ -148,4 +148,13 @@
         <url-pattern>/comment-post</url-pattern>
     </servlet-mapping>
     
+    <servlet>
+        <servlet-name>JoinedGroupController</servlet-name>
+        <servlet-class>com.controllers.JoinedGroupController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>JoinedGroupController</servlet-name>
+        <url-pattern>/joined-group</url-pattern>
+    </servlet-mapping>
+    
 </web-app>

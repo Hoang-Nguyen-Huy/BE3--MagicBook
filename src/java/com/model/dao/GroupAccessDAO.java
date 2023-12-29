@@ -162,6 +162,40 @@ public class GroupAccessDAO implements I_DAO<GroupAccess> {
         return res;
 
     }
+    
+    public ArrayList<GroupAccess> selectJoinedGroup(String userId) {
+        
+        ArrayList<GroupAccess> res = new ArrayList<>();
+        try {
+            
+            Connection con = JDBCUtil.getConnection();
+            
+            String sql = "SELECT * FROM groupaccess WHERE UserId = ?";
+            
+            PreparedStatement pst = con.prepareStatement(sql);
+            
+            pst.setString(1, userId);
+            
+            ResultSet rs = pst.executeQuery();
+            
+            while(rs.next()) {
+                String accessId = rs.getString("AccessId");
+                int isAdmin = rs.getInt("isAdmin");
+                String user = rs.getString("userId");
+                String group = rs.getString("groupId");
+
+                GroupAccess access = new GroupAccess(accessId, isAdmin, user, group);
+
+                res.add(access);
+            }
+            JDBCUtil.closeConnection(con);
+            
+        } catch(Exception e) {
+            
+        }
+        return res;
+        
+    }
 
     public int checkMember(String userId, String groupId) {
 
