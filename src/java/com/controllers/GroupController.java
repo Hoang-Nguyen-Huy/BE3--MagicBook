@@ -5,23 +5,29 @@
  */
 package com.controllers;
 
+import com.model.dao.CommentDAO;
 import com.model.dao.GroupAccessDAO;
 import com.model.dao.GroupDAO;
+import com.model.dao.LikeDAO;
 import com.model.dao.PostDAO;
 import com.model.dao.UserDAO;
 import com.model.dm.Group;
 import com.model.dm.GroupAccess;
 import com.model.dm.Post;
 import com.model.dm.User;
+import com.utils.Util;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Date;
 import java.sql.Time;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -55,7 +61,7 @@ public class GroupController extends HttpServlet {
                 break;
             }
         }
-        
+
         String postFile = "";
         Post post = new Post();
 
@@ -134,6 +140,23 @@ public class GroupController extends HttpServlet {
             GroupAccessDAO.getInstance().delete(access);
         }
         
+        //delete post --------------------
+        String actionPost = req.getParameter("actionPost");
+        String delPostId = req.getParameter("postId");
+        Post delPost = PostDAO.getInstance().checkIdFromUrl(delPostId);
+
+        if ("delete".equals(actionPost) && delPost != null) {
+            System.out.println(delPost.toString());
+            LikeDAO.getInstance().deleteByPostId(delPost.getPostId());
+            CommentDAO.getInstance().deleteByPostId(delPost.getPostId());
+            PostDAO.getInstance().delete(delPost);
+            System.out.println(actionPost);
+        } else if ("cancelDelete".equals(action) && delPost != null) {
+            System.out.println(action);
+            System.out.println(delPost.toString());
+        }
+        //------------------------
+
         // up Post -----------------
         if (post.getContent() != null || post.getFile() != null) {
             post.setVisibility(gr.getGroupId());
@@ -198,6 +221,27 @@ public class GroupController extends HttpServlet {
             req.setAttribute("account", true);
 
             req.setAttribute("groupId", groupId);
+
+            // hien thi cac bai post da dang
+            ArrayList<Post> posts = PostDAO.getInstance().selectByGroupId(gr.getGroupId());
+            HashMap<User, Post> map = new HashMap<>();
+
+            for (Post p : posts) {
+                map.put(UserDAO.getInstance().selectById(p.getUserId()), p);
+            }
+
+            Set<User> keyMap = map.keySet();
+
+            for (User u : keyMap) {
+                u.setUserId(Util.encryptPassword(u.getUserId()));
+            }
+
+            for (Post p : posts) {
+                p.setPostId(Util.encryptPassword(p.getPostId()));
+            }
+
+            req.setAttribute("post", map);
+            //------------------------------
 
             req.getRequestDispatcher("group.jsp").forward(req, resp);
         } else if (!GroupDAO.getInstance().checkCreator(user.getUserId(), gr.getGroupId())) {

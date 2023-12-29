@@ -197,6 +197,42 @@ public class PostDAO implements I_DAO<Post>{
         return res;
         
     }
+    
+    public ArrayList<Post> selectByGroupId(String groupId) {
+        
+        ArrayList<Post> res = new ArrayList<>();
+        try {
+            
+            Connection con = JDBCUtil.getConnection();
+            
+            String sql = "SELECT * FROM post WHERE visibility = ?";
+            
+            PreparedStatement pst = con.prepareStatement(sql);
+            
+            pst.setString(1, groupId);
+            
+            ResultSet rs = pst.executeQuery();
+            
+            while(rs.next()) {     
+                String id = rs.getString("PostId");
+                String content = rs.getString("content");
+                String visibility = rs.getString("visibility");
+                Date postDate = rs.getDate("postDate");
+                Time postTime = rs.getTime("postTime");
+                String file = rs.getString("file");
+                String userID = rs.getString("UserId");
+                
+                Post post = new Post(id, content, visibility, postDate, postTime, file, userID);
+                res.add(post);
+            }
+            JDBCUtil.closeConnection(con);
+            
+        } catch(Exception e) {
+            
+        }
+        return res;
+        
+    }
 
     @Override
     public ArrayList<Post> selectByCondition(String condition) {
