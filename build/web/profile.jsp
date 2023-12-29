@@ -460,7 +460,7 @@
                                                     <!-- Thêm nút Edit và Delete -->
                                                     <c:if test="${userId eq entry.key.getUserId()}">
                                                         <div class="post-actions">
-                                                            <form action="home" method="post">     
+                                                            <form action="profile?id=${userId}" method="post">     
                                                                 <a href="update-post?postid=${entry.value.getPostId()}">Edit</a>                                                                     
                                                                 <button class="delete-post-btn" onclick="deletePost('${entry.value.getPostId()}')" type="button">Delete</button>
                                                             </form>
@@ -528,7 +528,7 @@
                                             <img src="${entry.key.getAvatar()}" width="35" height="40" alt="Avatar">
                                             <!-- Thêm nút Edit và Delete -->
                                             <div class="post-actions">
-                                                <form action="home" method="post">     
+                                                <form action="profile?id=${userId}" method="post">     
                                                     <a href="update-post?postid=${entry.value.getPostId()}">Edit</a>                                                                     
                                                     <button class="delete-post-btn" onclick="deletePost('${entry.value.getPostId()}')" type="button">Delete</button>
                                                 </form>
@@ -609,15 +609,7 @@
                                             <div class="post-avatar">
                                                 <div class="avatar-wrapper">
                                                     <img src="${entry.key.getAvatar()}" width="35" height="40" alt="Avatar">
-                                                    <!-- Thêm nút Edit và Delete -->
-                                                    <c:if test="${userId eq entry.key.getUserId()}">
-                                                        <div class="post-actions">
-                                                            <form action="home" method="post">     
-                                                                <a href="update-post?postid=${entry.value.getPostId()}">Edit</a>                                                                     
-                                                                <button class="delete-post-btn" onclick="deletePost('${entry.value.getPostId()}')" type="button">Delete</button>
-                                                            </form>
-                                                        </div>         
-                                                    </c:if>
+                                                    
                                                 </div>
                                             </div>
 
@@ -678,15 +670,7 @@
                                             <div class="post-avatar">
                                                 <div class="avatar-wrapper">
                                                     <img src="${entry.key.getAvatar()}" width="35" height="40" alt="Avatar">
-                                                    <!-- Thêm nút Edit và Delete -->
-                                                    <c:if test="${userId eq entry.key.getUserId()}">
-                                                        <div class="post-actions">
-                                                            <form action="home" method="post">     
-                                                                <a href="update-post?postid=${entry.value.getPostId()}">Edit</a>                                                                     
-                                                                <button class="delete-post-btn" onclick="deletePost('${entry.value.getPostId()}')" type="button">Delete</button>
-                                                            </form>
-                                                        </div>         
-                                                    </c:if>
+                                                    
                                                 </div>
                                             </div>
 
@@ -761,15 +745,7 @@
                                             <div class="post-avatar">
                                                 <div class="avatar-wrapper">
                                                     <img src="${entry.key.getAvatar()}" width="35" height="40" alt="Avatar">
-                                                    <!-- Thêm nút Edit và Delete -->
-                                                    <c:if test="${userId eq entry.key.getUserId()}">
-                                                        <div class="post-actions">
-                                                            <form action="home" method="post">     
-                                                                <a href="update-post?postid=${entry.value.getPostId()}">Edit</a>                                                                     
-                                                                <button class="delete-post-btn" onclick="deletePost('${entry.value.getPostId()}')" type="button">Delete</button>
-                                                            </form>
-                                                        </div>         
-                                                    </c:if>
+                                                    
                                                 </div>
                                             </div>
 
@@ -830,15 +806,7 @@
                                             <div class="post-avatar">
                                                 <div class="avatar-wrapper">
                                                     <img src="${entry.key.getAvatar()}" width="35" height="40" alt="Avatar">
-                                                    <!-- Thêm nút Edit và Delete -->
-                                                    <c:if test="${userId eq entry.key.getUserId()}">
-                                                        <div class="post-actions">
-                                                            <form action="home" method="post">     
-                                                                <a href="update-post?postid=${entry.value.getPostId()}">Edit</a>                                                                     
-                                                                <button class="delete-post-btn" onclick="deletePost('${entry.value.getPostId()}')" type="button">Delete</button>
-                                                            </form>
-                                                        </div>         
-                                                    </c:if>
+                                                    
                                                 </div>
                                             </div>
 
@@ -912,16 +880,7 @@
                                         <div class="post">
                                             <div class="post-avatar">
                                                 <div class="avatar-wrapper">
-                                                    <img src="${entry.key.getAvatar()}" width="35" height="40" alt="Avatar">
-                                                    <!-- Thêm nút Edit và Delete -->
-                                                    <c:if test="${userId eq entry.key.getUserId()}">
-                                                        <div class="post-actions">
-                                                            <form action="home" method="post">     
-                                                                <a href="update-post?postid=${entry.value.getPostId()}">Edit</a>                                                                     
-                                                                <button class="delete-post-btn" onclick="deletePost('${entry.value.getPostId()}')" type="button">Delete</button>
-                                                            </form>
-                                                        </div>         
-                                                    </c:if>
+                                                    <img src="${entry.key.getAvatar()}" width="35" height="40" alt="Avatar">                                                    
                                                 </div>
                                             </div>
 
@@ -982,15 +941,7 @@
                                             <div class="post-avatar">
                                                 <div class="avatar-wrapper">
                                                     <img src="${entry.key.getAvatar()}" width="35" height="40" alt="Avatar">
-                                                    <!-- Thêm nút Edit và Delete -->
-                                                    <c:if test="${userId eq entry.key.getUserId()}">
-                                                        <div class="post-actions">
-                                                            <form action="home" method="post">     
-                                                                <a href="update-post?postid=${entry.value.getPostId()}">Edit</a>                                                                     
-                                                                <button class="delete-post-btn" onclick="deletePost('${entry.value.getPostId()}')" type="button">Delete</button>
-                                                            </form>
-                                                        </div>         
-                                                    </c:if>
+                                                    
                                                 </div>
                                             </div>
 
@@ -1051,15 +1002,7 @@
                                             <div class="post-avatar">
                                                 <div class="avatar-wrapper">
                                                     <img src="${entry.key.getAvatar()}" width="35" height="40" alt="Avatar">
-                                                    <!-- Thêm nút Edit và Delete -->
-                                                    <c:if test="${userId eq entry.key.getUserId()}">
-                                                        <div class="post-actions">
-                                                            <form action="home" method="post">     
-                                                                <a href="update-post?postid=${entry.value.getPostId()}">Edit</a>                                                                     
-                                                                <button class="delete-post-btn" onclick="deletePost('${entry.value.getPostId()}')" type="button">Delete</button>
-                                                            </form>
-                                                        </div>         
-                                                    </c:if>
+                                                    
                                                 </div>
                                             </div>
 
@@ -1120,15 +1063,7 @@
                                             <div class="post-avatar">
                                                 <div class="avatar-wrapper">
                                                     <img src="${entry.key.getAvatar()}" width="35" height="40" alt="Avatar">
-                                                    <!-- Thêm nút Edit và Delete -->
-                                                    <c:if test="${userId eq entry.key.getUserId()}">
-                                                        <div class="post-actions">
-                                                            <form action="home" method="post">     
-                                                                <a href="update-post?postid=${entry.value.getPostId()}">Edit</a>                                                                     
-                                                                <button class="delete-post-btn" onclick="deletePost('${entry.value.getPostId()}')" type="button">Delete</button>
-                                                            </form>
-                                                        </div>         
-                                                    </c:if>
+                                                    
                                                 </div>
                                             </div>
 
@@ -1204,15 +1139,7 @@
                                             <div class="post-avatar">
                                                 <div class="avatar-wrapper">
                                                     <img src="${entry.key.getAvatar()}" width="35" height="40" alt="Avatar">
-                                                    <!-- Thêm nút Edit và Delete -->
-                                                    <c:if test="${userId eq entry.key.getUserId()}">
-                                                        <div class="post-actions">
-                                                            <form action="home" method="post">     
-                                                                <a href="update-post?postid=${entry.value.getPostId()}">Edit</a>                                                                     
-                                                                <button class="delete-post-btn" onclick="deletePost('${entry.value.getPostId()}')" type="button">Delete</button>
-                                                            </form>
-                                                        </div>         
-                                                    </c:if>
+                                                    
                                                 </div>
                                             </div>
 
@@ -1273,15 +1200,7 @@
                                             <div class="post-avatar">
                                                 <div class="avatar-wrapper">
                                                     <img src="${entry.key.getAvatar()}" width="35" height="40" alt="Avatar">
-                                                    <!-- Thêm nút Edit và Delete -->
-                                                    <c:if test="${userId eq entry.key.getUserId()}">
-                                                        <div class="post-actions">
-                                                            <form action="home" method="post">     
-                                                                <a href="update-post?postid=${entry.value.getPostId()}">Edit</a>                                                                     
-                                                                <button class="delete-post-btn" onclick="deletePost('${entry.value.getPostId()}')" type="button">Delete</button>
-                                                            </form>
-                                                        </div>         
-                                                    </c:if>
+                                                    
                                                 </div>
                                             </div>
 
@@ -1388,7 +1307,7 @@
 
                 var form = document.createElement("form");
                 form.method = "post";
-                form.action = "home";
+                form.action = "profile?id=${userId}";
 
                 var postIdInput = document.createElement("input");
                 postIdInput.type = "hidden";
@@ -1397,7 +1316,7 @@
 
                 var actionInput = document.createElement("input");
                 actionInput.type = "hidden";
-                actionInput.name = "action";
+                actionInput.name = "actionPost";
                 actionInput.value = action;
 
                 form.appendChild(postIdInput);

@@ -5,7 +5,9 @@
  */
 package com.controllers;
 
+import com.model.dao.CommentDAO;
 import com.model.dao.FriendshipDAO;
+import com.model.dao.LikeDAO;
 import com.model.dao.PostDAO;
 import com.model.dao.UserDAO;
 import com.model.dm.Friendship;
@@ -142,6 +144,23 @@ public class ProfileController extends HttpServlet {
             Friendship fs = new Friendship("Accepted", user.getUserId(), receiver.getUserId());
             FriendshipDAO.getInstance().update(fs);
         }
+        
+        //delete post --------------------
+        String actionPost = req.getParameter("actionPost");
+        String delPostId = req.getParameter("postId");
+        Post delPost = PostDAO.getInstance().checkIdFromUrl(delPostId);
+
+        if ("delete".equals(actionPost) && delPost != null) {
+            System.out.println(delPost.toString());
+            LikeDAO.getInstance().deleteByPostId(delPost.getPostId());
+            CommentDAO.getInstance().deleteByPostId(delPost.getPostId());
+            PostDAO.getInstance().delete(delPost);
+            System.out.println(actionPost);
+        } else if ("cancelDelete".equals(action) && delPost != null) {
+            System.out.println(action);
+            System.out.println(delPost.toString());
+        }
+        //------------------------
 
         // up Post -----------------
         if (post.getContent() != null || post.getFile() != null) {
