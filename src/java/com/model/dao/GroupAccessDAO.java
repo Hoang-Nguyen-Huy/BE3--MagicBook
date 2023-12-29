@@ -5,7 +5,9 @@
  */
 package com.model.dao;
 
+import com.model.dm.Group;
 import com.model.dm.GroupAccess;
+import com.model.dm.User;
 import com.utils.JDBCUtil;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -171,6 +173,19 @@ public class GroupAccessDAO implements I_DAO<GroupAccess> {
         }
         return -1;
 
+    }
+    
+    public int checkMemberFrontEnd (String userId, String groupId) {
+        
+        ArrayList<GroupAccess> check = selectAll();
+        User user = UserDAO.getInstance().checkAccessToHome(userId);
+        for (GroupAccess access : check) {
+            if (access.getUserId().equals(user.getUserId()) && access.getGroupId().equals(groupId)) {
+                return access.getIsAdmin();
+            }
+        }
+        return -1;
+        
     }
 
 }

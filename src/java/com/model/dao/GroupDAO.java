@@ -218,6 +218,63 @@ public class GroupDAO implements I_DAO<Group>{
         return res;
         
     }
+    
+    public String selectUserIdByGroupId (String groupId) {
+        
+        String res = "";
+        try {
+            
+            Connection con = JDBCUtil.getConnection();
+            
+            String sql = "SELECT UserId FROM gr WHERE GroupId = ?";
+            
+            PreparedStatement pst = con.prepareStatement(sql);
+            
+            pst.setString(1, groupId);
+            
+            ResultSet rs = pst.executeQuery();
+            
+            while(rs.next()) {
+                String userId = rs.getString("UserId");
+                
+                res = Util.encryptPassword(userId);
+            }
+            
+        } catch(Exception e) {
+            
+        }
+        return res;
+    }
+    
+    public String selectNameByIdForHome (String groupId) {
+        
+        String res = "";
+        try {
+            
+            Connection con = JDBCUtil.getConnection();
+            
+            String sql = "SELECT name FROM gr WHERE GroupId = ?";
+            
+            
+            PreparedStatement pst = con.prepareStatement(sql);
+            
+            pst.setString(1, groupId);
+            
+            ResultSet rs = pst.executeQuery();
+            
+            while(rs.next()) {
+                String name = rs.getString("name");
+                
+                res = name;
+            }
+            JDBCUtil.closeConnection(con);
+            
+        } catch(Exception e) {
+            
+        }
+        return res;
+        
+    }
 
     @Override
     public ArrayList<Group> selectByCondition(String condition) {
