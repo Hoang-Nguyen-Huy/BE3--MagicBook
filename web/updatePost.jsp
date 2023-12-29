@@ -4,6 +4,7 @@
     Author     : Dell Latitude 7490
 --%>
 
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -54,15 +55,41 @@
                 <p style="color: red;">${requestScope.error}</p>
             </c:if>
             <form method="post" enctype="multipart/form-data">
-                <label>
-                    <input type="radio" name="visibility" value="public" checked> Public
-                </label>
-                <label>
-                    <input type="radio" name="visibility" value="friend"> Friends
-                </label>
-                <label>
-                    <input type="radio" name="visibility" value="onlyme"> Only Me
-                </label>
+                <c:choose>
+                    <c:when test="${oldPost.getVisibility() eq 'public'}">
+                        <label>
+                            <input type="radio" name="visibility" value="public" checked> Public
+                        </label>
+                        <label>
+                            <input type="radio" name="visibility" value="friend"> Friends
+                        </label>
+                        <label>
+                            <input type="radio" name="visibility" value="onlyme"> Only Me
+                        </label>
+                    </c:when>
+                    <c:when test="${oldPost.getVisibility() eq 'friend'}">
+                        <label>
+                            <input type="radio" name="visibility" value="public"> Public
+                        </label>
+                        <label>
+                            <input type="radio" name="visibility" value="friend" checked> Friends
+                        </label>
+                        <label>
+                            <input type="radio" name="visibility" value="onlyme"> Only Me
+                        </label>
+                    </c:when>
+                    <c:when test="${oldPost.getVisibility() eq 'onlyme'}">
+                        <label>
+                            <input type="radio" name="visibility" value="public"> Public
+                        </label>
+                        <label>
+                            <input type="radio" name="visibility" value="friend"> Friends
+                        </label>
+                        <label>
+                            <input type="radio" name="visibility" value="onlyme" checked> Only Me
+                        </label>
+                    </c:when>
+                </c:choose>
                 <br>
                 <br>
                 <label for="content">New caption:</label>

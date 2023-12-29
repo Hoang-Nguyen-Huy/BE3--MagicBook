@@ -157,6 +157,10 @@ public class UpdatePostController extends HttpServlet {
         }
         if (user != null) {
             req.setAttribute("userId", id);
+            
+            Post post = PostDAO.getInstance().checkIdFromUrl(urlPostId);
+            
+            req.setAttribute("oldPost", post);
             req.getRequestDispatcher("updatePost.jsp").forward(req, resp);
         } else {
             resp.sendRedirect(req.getContextPath());
