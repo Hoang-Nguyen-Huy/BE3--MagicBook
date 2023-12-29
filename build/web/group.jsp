@@ -527,11 +527,86 @@
                                     Member List
                                 </a>
                             </button> 
-                            <div class="post-form">
-                                <textarea id="postContent" placeholder="What's on your mind?" rows="4"></textarea>
-                                <input type="file" id="fileInput" accept="image/*, video/*">
-                                <button onclick="submitPost()">Post</button>
-                            </div>
+                            <form action="group?groupid=${groupId}" method="post" enctype="multipart/form-data">
+                                <div class="post-form">
+                                    <textarea id="postContent" name="postContent" placeholder="What's on your mind?" rows="6"></textarea>
+                                    <input type="file" id="fileInput" name="fileInput" accept="image/*, video/*">
+
+                                    <button type="submit">Post</button>
+                                </div>
+                            </form>
+                            <div id="postsContainer">
+                                <h2>Recent Posts</h2>
+                                <c:forEach var="entry" items="${post}">
+                                    <div class="post">
+                                            <div class="post-avatar">
+                                                <div class="avatar-wrapper">
+                                                    <img src="${entry.key.getAvatar()}" width="35" height="40" alt="Avatar">
+                                                    <!-- Thêm nút Edit và Delete -->
+                                                    <c:if test="${accountId eq entry.key.getUserId()}">
+                                                        <div class="post-actions">
+                                                            <form action="group?groupid=${groupId}" method="post">     
+                                                                <a href="update-post?postid=${entry.value.getPostId()}">Edit</a>                                                                     
+                                                                <button class="delete-post-btn" onclick="deletePost('${entry.value.getPostId()}')" type="button">Delete</button>
+                                                            </form>
+                                                        </div>         
+                                                    </c:if>                                                                             
+                                                </div>
+                                            </div>
+
+                                           <div class="post-header">
+                                                <h3>
+                                                    <a href="profile?id=${entry.key.getUserId()}">
+                                                        <c:out value="${entry.key.getFirstName()} ${entry.key.getLastName()}"/>
+                                                    </a>
+                                                </h3>
+
+                                                 <!-- Hiển thị thông tin ngày và giờ bài đăng -->
+                                                <div class="post-info">
+                                                    <p class="post-date">${entry.value.getPostDate()}</p>
+                                                    <p class="post-time">${entry.value.getPostTime()}</p>
+                                                    <p class="post-visibility">${GroupDAO.getInstance().selectNameById(groupId)}</p>
+                                                </div>
+                                            </div>
+
+                                            <p><c:out value="${entry.value.getContent()}"/></p>
+
+                                            <c:choose>
+                                                <c:when test="${entry.value.getFile() != null}">
+                                                    <c:set var="fileName" value="${entry.value.getFile()}" />
+                                                    <c:set var="lowercaseFileName" value="${fn:toLowerCase(fileName)}" />
+
+                                                    <c:choose>
+                                                        <c:when test="${lowercaseFileName.endsWith('.mp4') or lowercaseFileName.endsWith('.mp3') or lowercaseFileName.endsWith('.mov')}">
+                                                            <!-- Nếu là video -->
+                                                            <video width="320" height="400" controls>
+                                                                <source src="${entry.value.getFile()}" type="video/${lowercaseFileName.substring(lowercaseFileName.lastIndexOf('.') + 1)}">
+                                                                Your browser does not support the video tag.
+                                                            </video>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <!-- Nếu là hình ảnh -->
+                                                            <img src="${entry.value.getFile()}" alt="Image Description" width="320" height="400">
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </c:when>
+                                            </c:choose>
+                                            <div class="post-actions">
+                                                <!-- Nút Like -->
+                                                <button class="like-btn" onclick="likePost('${entry.value.getPostId()}')">
+                                                    Like <span class="like-count"><c:out value="${LikeDAO.getInstance().countLike(entry.value.getPostId())}" /></span>
+                                                </button>
+
+                                                <!-- Nút Comment -->
+                                                <a class="comment-btn" href="comment-post?postid=${entry.value.getPostId()}">
+                                                    Comment <span class="comment-count"><c:out value="${CommentDAO.getInstance().countComment(entry.value.getPostId())}" /></span>
+                                                </a>
+
+                                            </div>
+                                        </div>
+                                                <hr>    
+                                </c:forEach>
+                            </div>    
                         </c:when>
                         <c:when test="${tuesday && !member}">
                             <form action="group?groupid=${groupId}" method="post" onsubmit="submitForm(event);">

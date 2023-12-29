@@ -139,7 +139,7 @@ public class GroupController extends HttpServlet {
             GroupAccess access = new GroupAccess(0, user.getUserId(), gr.getGroupId());
             GroupAccessDAO.getInstance().delete(access);
         }
-        
+
         //delete post --------------------
         String actionPost = req.getParameter("actionPost");
         String delPostId = req.getParameter("postId");
@@ -260,6 +260,27 @@ public class GroupController extends HttpServlet {
                 req.setAttribute("member", true);
                 req.setAttribute("admin", false);
                 req.setAttribute("groupId", groupId);
+
+                // hien thi cac bai post da dang
+                ArrayList<Post> posts = PostDAO.getInstance().selectByGroupId(gr.getGroupId());
+                HashMap<User, Post> map = new HashMap<>();
+
+                for (Post p : posts) {
+                    map.put(UserDAO.getInstance().selectById(p.getUserId()), p);
+                }
+
+                Set<User> keyMap = map.keySet();
+
+                for (User u : keyMap) {
+                    u.setUserId(Util.encryptPassword(u.getUserId()));
+                }
+
+                for (Post p : posts) {
+                    p.setPostId(Util.encryptPassword(p.getPostId()));
+                }
+
+                req.setAttribute("post", map);
+                //------------------------------
 
                 req.getRequestDispatcher("group.jsp").forward(req, resp);
             } else if (GroupAccessDAO.getInstance().checkMember(user.getUserId(), gr.getGroupId()) == -1) { // tuseday = true thi hien nut Join
