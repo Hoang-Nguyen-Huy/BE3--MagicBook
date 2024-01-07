@@ -33,12 +33,14 @@ public class ChatRestController extends HttpServlet {
 
         // sysout ra de xem thu
         for (MessageDTO mess : messages) {
-            System.out.println(mess);
+            System.out.println("tin nhan in ra browser:" + mess);
         }
         //---------------------
 
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(messages);
+        
+        System.out.println("json: " + json);
 
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");

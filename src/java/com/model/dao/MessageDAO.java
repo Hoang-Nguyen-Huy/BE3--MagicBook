@@ -94,8 +94,10 @@ public class MessageDAO implements I_DAO<Message> {
 
             PreparedStatement pst = con.prepareStatement(sql);
 
-            pst.setString(1, userId);
-            pst.setString(2, receiverId);
+            User user = UserDAO.getInstance().checkAccessToHome(userId);
+            User receiver = UserDAO.getInstance().checkAccessToHome(receiverId);
+            pst.setString(1, user.getUserId());
+            pst.setString(2, receiver.getUserId());
 
             ResultSet rs = pst.executeQuery();
 

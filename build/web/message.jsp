@@ -245,7 +245,7 @@
                     websocket.onmessage = function (data) {
                         console.log(data.data);
                         setMessage(JSON.parse(data.data));
-                        console.log('Saving message...'); 
+                        console.log('Saving message...');
                     };
 
                     websocket.onerror = function () {
@@ -659,101 +659,6 @@
 
             }
 
-//            function makeFriend(rightSide) {
-//                fetch("http://" + window.location.host + "/friend-rest-controller?sender=" + username + "&receiver=" + receiver)
-//                        .then(function (data) {
-//                            return data.json();
-//                        })
-//                        .then(data => {
-//                            var status = '';
-//                            if (document.getElementById('status-' + receiver).classList.contains('online')) {
-//                                status = 'online';
-//                            }
-//
-//                            if (data.status == false && data.owner == username && data.owner != "any") {
-//                                rightSide = '<div class="user-contact">' + '<div class="back">'
-//                                        + '<i class="fa fa-arrow-left"></i>'
-//                                        + '</div>'
-//                                        + '<div class="user-contain">'
-//                                        + '<div class="user-img">'
-//                                        + '<img src="' + receiverAvatar + '" '
-//                                        + 'alt="Image of user">'
-//                                        + '<div class="user-img-dot ' + status + '"></div>'
-//                                        + '</div>'
-//                                        + '<div class="user-info">'
-//                                        + '<span class="user-name">' + receiver + '</span>'
-//                                        + '</div>'
-//                                        + '</div>'
-//                                        + '<span style="font-size:1.8rem">Sent Request</span>'
-//                                        + '</form>'
-//                                        + '</div>'
-//                                        + '<div class="list-messages-contain">'
-//                                        + '<ul id="chat" class="list-messages">'
-//                                        + '</ul>'
-//                                        + '</div>';
-//
-//                                document.getElementById("receiver").innerHTML = rightSide;
-//                            } else if (data.status == false && data.owner != username && data.owner != "any") {
-//                                rightSide = '<div class="user-contact">' + '<div class="back">'
-//                                        + '<i class="fa fa-arrow-left"></i>'
-//                                        + '</div>'
-//                                        + '<div class="user-contain">'
-//                                        + '<div class="user-img">'
-//                                        + '<img src="' + receiverAvatar + '" '
-//                                        + 'alt="Image of user">'
-//                                        + '<div class="user-img-dot ' + status + '"></div>'
-//                                        + '</div>'
-//                                        + '<div class="user-info">'
-//                                        + '<span class="user-name">' + receiver + '</span>'
-//                                        + '</div>'
-//                                        + '</div>'
-//                                        + '<form action="http://' + window.location.host + '/chat" method="post" >'
-//                                        + '<input type="hidden" name="sender" value="' + username + '">'
-//                                        + '<input type="hidden" name="receiver" value="' + receiver + '">'
-//                                        + '<input type="hidden" name="status" value="true">'
-//                                        + '<input type="hidden" name="isAccept" value="true">'
-//                                        + '<input class="btn" type="submit" value="Accept Friend Request">'
-//                                        + '</form>'
-//                                        + '</div>'
-//                                        + '<div class="list-messages-contain">'
-//                                        + '<ul id="chat" class="list-messages">'
-//                                        + '</ul>'
-//                                        + '</div>';
-//                                document.getElementById("receiver").innerHTML = rightSide;
-//
-//                            } else if (data.status == false && data.sender == "any" && data.receiver == "any") {
-//                                rightSide = '<div class="user-contact">' + '<div class="back">'
-//                                        + '<i class="fa fa-arrow-left"></i>'
-//                                        + '</div>'
-//                                        + '<div class="user-contain">'
-//                                        + '<div class="user-img">'
-//                                        + '<img src="' + receiverAvatar + '" '
-//                                        + 'alt="Image of user">'
-//                                        + '<div class="user-img-dot ' + status + '"></div>'
-//                                        + '</div>'
-//                                        + '<div class="user-info">'
-//                                        + '<span class="user-name">' + receiver + '</span>'
-//                                        + '</div>'
-//                                        + '</div>'
-//                                        + '<form action="http://' + window.location.host + '/chat" method="post" >'
-//                                        + '<input type="hidden" name="sender" value="' + username + '">'
-//                                        + '<input type="hidden" name="receiver" value="' + receiver + '">'
-//                                        + '<input type="hidden" name="status" value="false">'
-//                                        + '<input type="hidden" name="isAccept" value="false">'
-//                                        + '<input class="btn" type="submit" value="Add Friend">'
-//                                        + '</form>'
-//                                        + '</div>'
-//                                        + '<div class="list-messages-contain">'
-//                                        + '<ul id="chat" class="list-messages">'
-//                                        + '</ul>'
-//                                        + '</div>';
-//                                document.getElementById("receiver").innerHTML = rightSide;
-//                            }
-//
-//                            handleResponsive();
-//                        })
-//                        .catch(ex => console.log(ex));
-//            }
 
             function fetchGroup() {
                 fetch("http://" + window.location.host + "/conversations-rest-controller?username=" + username)
@@ -966,17 +871,27 @@
 
             function setMessage(msg) {
                 console.log("online users: " + msg.onlineList);
+
                 if (msg.content !== '[P]open' && msg.content !== '[P]close') {
                     var currentChat = document.getElementById('chat').innerHTML;
                     var newChatMsg = '';
                     if (msg.receiver !== null) {
                         newChatMsg = customLoadMessage(msg.username, msg.content);
+
+                        // Kiểm tra xem tin nhắn đã tồn tại trong phần tử chat hay chưa
+                        if (currentChat.indexOf(newChatMsg) === -1) {
+                            document.getElementById('chat').innerHTML = currentChat + newChatMsg;
+                            goLastestMsg();
+                        }
                     } else {
                         newChatMsg = customLoadMessageGroup(msg.username, msg.groupId, msg.content, msg.avatar);
+
+                        // Kiểm tra xem tin nhắn đã tồn tại trong phần tử chat hay chưa
+                        if (currentChat.indexOf(newChatMsg) === -1) {
+                            document.getElementById('chat').innerHTML = currentChat + newChatMsg;
+                            goLastestMsg();
+                        }
                     }
-                    document.getElementById('chat').innerHTML = currentChat
-                            + newChatMsg;
-                    goLastestMsg();
                 } else {
                     if (msg.message === '[P]open') {
                         msg.onlineList.forEach(username => {
@@ -988,9 +903,9 @@
                     } else {
                         setOnline(msg.username, false);
                     }
-
                 }
             }
+
 
             function setOnline(username, isOnline) {
                 let ele = document.getElementById('status-' + username);
@@ -1044,18 +959,16 @@
                 };
                 username = document.getElementById("username").textContent;
                 xhttp.open("GET", "http://" + window.location.host + "/MagicBook/chat-rest-controller?sender=" + username
-                        + "&receiver=" + receiver + "&senderId=" + '${userId}' + "&receiverId=" + receiverId , true);
+                        + "&receiver=" + receiver + "&senderId=" + '${userId}' + "&receiverId=" + receiverId, true);
                 xhttp.send();
             }
 
             function customLoadMessage(sender, message) {
                 var imgSrc = receiverAvatar;
-                
+                console.log(message);
                 var msgDisplay = '<li>'
                         + '<div class="message';
-                if (receiver !== sender && username !== sender) {
-                    return '';
-                } else if (receiver === sender) {
+                if (receiver === sender) {
                     msgDisplay += '">';
                 } else {
                     imgSrc = userAvatar;
