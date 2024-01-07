@@ -48,4 +48,18 @@ public class Util {
 
     }
 
+    // Hàm mã hóa tin nhắn
+    public static String encrypt(String message) {
+        char[] messageChars = message.toCharArray();
+        for (int i = 0; i < messageChars.length; i++) {
+            messageChars[i] = (char) (messageChars[i] ^ 0xFF); // XOR với 0xFF
+        }
+        return new String(messageChars);
+    }
+
+    // Hàm giải mã tin nhắn
+    public static String decrypt(String encryptedMessage) {
+        return encrypt(encryptedMessage); // Vì XOR có tính chất đảo ngược
+    }
+
 }

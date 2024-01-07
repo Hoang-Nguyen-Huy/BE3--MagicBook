@@ -39,7 +39,7 @@ public class MessageDAO implements I_DAO<Message> {
 
             PreparedStatement pst = con.prepareStatement(sql);
 
-            pst.setString(1, message.getContent());
+            pst.setString(1, Util.encrypt(message.getContent()));
             pst.setDate(2, message.getSentDate());
             pst.setTime(3, message.getSentTime());
             User receiver = UserDAO.getInstance().checkAccessToHome(message.getReceiverId());
@@ -106,7 +106,7 @@ public class MessageDAO implements I_DAO<Message> {
 
             while (rs.next()) {
                 String messageId = rs.getString("MessageId");
-                String content = rs.getString("content");
+                String content = Util.decrypt(rs.getString("content"));
                 Date sentDate = rs.getDate("sentDate");
                 Time sentTime = rs.getTime("sentTime");
                 String ReceiverId = rs.getString("receiverId");
