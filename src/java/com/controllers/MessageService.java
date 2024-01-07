@@ -10,6 +10,7 @@ import com.model.dm.Message;
 import com.model.dto.MessageDTO;
 import java.sql.Date;
 import java.sql.Time;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +20,11 @@ import java.util.List;
  */
 public class MessageService {
 
+    private String formatSqlDate(Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        return sdf.format(date);
+    }
+    
     private Message convertToEntity(MessageDTO messageDTO) {
         String messageId = messageDTO.getMessageId();
         String content = messageDTO.getContent();
@@ -26,7 +32,10 @@ public class MessageService {
         Time sentTime = messageDTO.getSentTime();
         String receiverId = messageDTO.getReceiverId();
         String userId = messageDTO.getUserId();
-        Message mess = new Message(messageId, content, sentDate, sentTime, receiverId, userId);
+        
+        String formattedDate = formatSqlDate(sentDate);
+        
+        Message mess = new Message(messageId, content, Date.valueOf(formattedDate), sentTime, receiverId, userId);
         return mess;
     }
 
@@ -55,7 +64,7 @@ public class MessageService {
     
     public void saveMessage(MessageDTO messageDTO) {
         Message mess = convertToEntity(messageDTO);
-        System.out.println(mess);
+        System.out.println("tin nhan truoc khi dc luu vao db:" + mess);
         MessageDAO.getInstance().insert(mess);
     }
 

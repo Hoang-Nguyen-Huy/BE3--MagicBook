@@ -6,6 +6,7 @@
 package com.model.dao;
 
 import com.model.dm.Message;
+import com.model.dm.User;
 import com.utils.JDBCUtil;
 import com.utils.Util;
 import java.sql.Connection;
@@ -19,42 +20,44 @@ import java.util.ArrayList;
  *
  * @author Nguyen Huy Hoang
  */
-public class MessageDAO implements I_DAO<Message>{
+public class MessageDAO implements I_DAO<Message> {
 
     public static MessageDAO getInstance() {
         return new MessageDAO();
     }
-    
+
     @Override
     public int insert(Message message) {
-        
+
         int res = 0;
         try {
-            
+
             Connection con = JDBCUtil.getConnection();
-            
+
             String sql = "INSERT INTO message(MessageId, content, sentDate, sentTime, receiverId, UserId)"
                     + "VALUES (MD5(UUID()), ?, ?, ?, ?, ?)";
-            
+
             PreparedStatement pst = con.prepareStatement(sql);
-            
+
             pst.setString(1, message.getContent());
             pst.setDate(2, message.getSentDate());
             pst.setTime(3, message.getSentTime());
-            pst.setString(4, message.getReceiverId());
-            pst.setString(5, message.getUserId());
-            
+            User receiver = UserDAO.getInstance().checkAccessToHome(message.getReceiverId());
+            pst.setString(4, receiver.getUserId());
+            User user = UserDAO.getInstance().checkAccessToHome(message.getUserId());
+            pst.setString(5, user.getUserId());
+
             res = pst.executeUpdate();
-            
+
             System.out.println("da luu tin nhan thanh cong");
-            
+
             JDBCUtil.closeConnection(con);
-            
-        } catch(Exception e) {
-            
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return res;
-        
+
     }
 
     @Override
@@ -76,90 +79,90 @@ public class MessageDAO implements I_DAO<Message>{
     public Message selectById(String id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     // select cac tin nhan cua nguoi gui
     public ArrayList<Message> selectUserId(String userId, String receiverId) {
-        
+
         ArrayList<Message> res = new ArrayList<>();
         try {
-            
+
             Connection con = JDBCUtil.getConnection();
-            
+
             String sql = "SELECT * FROM message"
                     + " WHERE UserId = ? AND receiverId = ?"
                     + " ORDER BY sentDate, sentTime";
-            
+
             PreparedStatement pst = con.prepareStatement(sql);
-            
+
             pst.setString(1, userId);
             pst.setString(2, receiverId);
-            
+
             ResultSet rs = pst.executeQuery();
-            
-            while(rs.next()) {
+
+            while (rs.next()) {
                 String messageId = rs.getString("MessageId");
                 String content = rs.getString("content");
                 Date sentDate = rs.getDate("sentDate");
                 Time sentTime = rs.getTime("sentTime");
                 String ReceiverId = rs.getString("receiverId");
                 String UserId = rs.getString("UserId");
-                
+
                 Message mess = new Message(messageId, content, sentDate, sentTime, ReceiverId, UserId);
-                
+
                 res.add(mess);
             }
             JDBCUtil.closeConnection(con);
-            
-        } catch(Exception e) {
-            
+
+        } catch (Exception e) {
+
         }
         return res;
-        
+
     }
 
     // select cac tin nhan cua nguoi nhan 
     public ArrayList<Message> selectByReceiverId(String userId, String receiverId) {
-        
+
         ArrayList<Message> res = new ArrayList<>();
         try {
-            
+
             Connection con = JDBCUtil.getConnection();
-            
+
             String sql = "SELECT * FROM message"
                     + " WHERE UserId = ? AND receiverId = ?"
                     + " ORDER BY sentDate, sentTime";
-            
+
             PreparedStatement pst = con.prepareStatement(sql);
-            
+
             pst.setString(1, receiverId);
             pst.setString(2, userId);
-            
+
             ResultSet rs = pst.executeQuery();
-            
-            while(rs.next()) {
+
+            while (rs.next()) {
                 String messageId = rs.getString("MessageId");
                 String content = rs.getString("content");
                 Date sentDate = rs.getDate("sentDate");
                 Time sentTime = rs.getTime("sentTime");
                 String ReceiverId = rs.getString("receiverId");
                 String UserId = rs.getString("UserId");
-                
+
                 Message mess = new Message(messageId, content, sentDate, sentTime, ReceiverId, UserId);
-                
+
                 res.add(mess);
             }
             JDBCUtil.closeConnection(con);
-            
-        } catch(Exception e) {
-            
+
+        } catch (Exception e) {
+
         }
         return res;
-        
+
     }
-    
+
     @Override
     public ArrayList<Message> selectByCondition(String condition) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
 }

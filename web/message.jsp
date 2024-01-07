@@ -243,6 +243,7 @@
                     };
 
                     websocket.onmessage = function (data) {
+                        console.log(data.data);
                         setMessage(JSON.parse(data.data));
                         console.log('Saving message...'); 
                     };
@@ -911,7 +912,7 @@
                 var currentDate = new Date();
 
                 // Format ngày và giờ
-                var messageSentDate = currentDate.toLocaleDateString(); // Ngày
+                var messageSentDate = currentDate.toISOString().split('T')[0]; // Ngày
                 var messageSentTime = currentDate.toLocaleTimeString(); // Giờ
 
 
@@ -954,9 +955,8 @@
 
             function buildMessageToJson(message, type, messageSentDate, messageSentTime, receiverId) {
                 return {
-                    username: username,
+                    messageId: null,
                     content: message,
-                    receiver: receiver,
                     sentDate: messageSentDate,
                     sentTime: messageSentTime,
                     receiverId: receiverId,
