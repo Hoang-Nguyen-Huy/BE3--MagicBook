@@ -832,12 +832,12 @@
                     if (msg.message === '[P]open') {
                         msg.onlineList.forEach(username => {
                             try {
-                                setOnline(username, true);
+                                setOnline(msg.userId, true);
                             } catch (ex) {
                             }
                         });
                     } else {
-                        setOnline(msg.username, false);
+                        setOnline(msg.userId, false);
                     }
                 }
             }

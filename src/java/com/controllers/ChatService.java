@@ -50,7 +50,7 @@ public class ChatService {
     public void sendMessageToOneUser(MessageDTO message) {
         if (message.getReceiverId() != null) {
             messageWebSockets.stream()
-                    .filter(messageWebSocket -> !messageWebSocket.getUserId().equals(message.getReceiverId()))
+                    .filter(messageWebSocket -> messageWebSocket.getUserId().equals(message.getReceiverId()))
                     .forEach(messageWebSocket -> {
                         try {
                             messageWebSocket.getSession().getBasicRemote().sendObject(message);
