@@ -319,7 +319,7 @@
                 </button>
                 
                 <button onclick="openMessages()">
-                    <a href="https://www.facebook.com/">
+                    <a href="message">
                         <img src="DefaultImg\message-icon.png" width="20px" height="20px" alt="Messages">
                     </a>
                 </button>

@@ -878,6 +878,9 @@
                             <input type="hidden" id="friendRequestId" name="friendRequestId" value="">
                             <button type="button" id="addFriendButton" style="background-color: #4267b2; color: white;" onclick="toggleFriendRequest(event, '${userId}', 'cancelRequest')">Friend</button>
                         </form>
+                        <a href="message?id=${userId}" >
+                            Message
+                        </a>
                         <div id="postsContainer">
                             <h2>Recent Posts</h2>      
                             <c:forEach var="entry" items="${post}">

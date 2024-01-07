@@ -3,10 +3,15 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Dell%20Latitude%207490/Documents/NetBeansProjects/MagicBook/web/home.jsp</file>
-            <file>file:/C:/Users/Dell%20Latitude%207490/Documents/NetBeansProjects/MagicBook/src/java/com/model/dao/PostDAO.java</file>
-            <file>file:/C:/Users/Dell%20Latitude%207490/Documents/NetBeansProjects/MagicBook/src/java/com/controllers/HomeController.java</file>
-            <file>file:/C:/Users/Dell%20Latitude%207490/Documents/NetBeansProjects/MagicBook/src/java/com/model/dm/Post.java</file>
+            <file>file:/C:/Users/Dell%20Latitude%207490/Documents/NetBeansProjects/MagicBook/src/java/com/model/dao/MessageDAO.java</file>
+            <file>file:/C:/Users/Dell%20Latitude%207490/Documents/NetBeansProjects/MagicBook/web/message.jsp</file>
+            <file>file:/C:/Users/Dell%20Latitude%207490/Documents/NetBeansProjects/MagicBook/src/java/com/controllers/ChatRestController.java</file>
+            <file>file:/C:/Users/Dell%20Latitude%207490/Documents/NetBeansProjects/MagicBook/src/java/com/controllers/ChatService.java</file>
+            <file>file:/C:/Users/Dell%20Latitude%207490/Documents/NetBeansProjects/MagicBook/src/java/com/controllers/MessageService.java</file>
+            <file>file:/C:/Users/Dell%20Latitude%207490/Documents/NetBeansProjects/MagicBook/src/java/com/model/dto/MessageDTO.java</file>
+            <file>file:/C:/Users/Dell%20Latitude%207490/Documents/NetBeansProjects/MagicBook/src/java/com/websocket/MessageWebSocket.java</file>
+            <file>file:/C:/Users/Dell%20Latitude%207490/Documents/NetBeansProjects/MagicBook/src/java/com/model/dm/Message.java</file>
+            <file>file:/C:/Users/Dell%20Latitude%207490/Documents/NetBeansProjects/MagicBook/src/java/com/controllers/MessageController.java</file>
         </group>
     </open-files>
 </project-private>

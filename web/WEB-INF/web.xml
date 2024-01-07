@@ -157,4 +157,22 @@
         <url-pattern>/joined-group</url-pattern>
     </servlet-mapping>
     
+    <servlet>
+        <servlet-name>MessageController</servlet-name>
+        <servlet-class>com.controllers.MessageController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>MessageController</servlet-name>
+        <url-pattern>/message</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>ChatRestController</servlet-name>
+        <servlet-class>com.controllers.ChatRestController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ChatRestController</servlet-name>
+        <url-pattern>/chat-rest-controller</url-pattern>
+    </servlet-mapping>
+    
 </web-app>
