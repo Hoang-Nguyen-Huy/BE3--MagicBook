@@ -7,6 +7,7 @@ package com.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.model.dto.MessageDTO;
+import com.utils.Util;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -33,6 +34,8 @@ public class ChatRestController extends HttpServlet {
 
         // sysout ra de xem thu
         for (MessageDTO mess : messages) {
+            mess.setUserId(Util.encryptPassword(mess.getUserId()));
+            mess.setReceiverId(Util.encryptPassword(mess.getReceiverId()));
             System.out.println("tin nhan in ra browser:" + mess);
         }
         //---------------------

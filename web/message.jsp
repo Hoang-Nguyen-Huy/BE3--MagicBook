@@ -341,70 +341,6 @@
 //                makeFriend(rightSide);
             }
 
-            function setGroup(element) {
-                receiver = null;
-                groupName = element.getAttribute("data-name");
-                groupId = element.getAttribute("data-id");
-
-                receiverAvatar = document.getElementById("img-group-" + groupId).src;
-
-                listUserAdd = [];
-
-                numberMember = parseInt(element.getAttribute("data-number"));
-
-
-                fetch("http://" + window.location.host + "/conversations-rest-controller?usersConversationId=" + groupId)
-                        .then(data => data.json())
-                        .then(data => {
-                            let findObject = data.find(element => element.username == username);
-                            let isAdmin = findObject.admin;
-
-                            var rightSide = '<div class="user-contact">' + '<div class="back">'
-                                    + '<i class="fa fa-arrow-left"></i>'
-                                    + '</div>'
-                                    + '<div class="user-contain">'
-                                    + '<div class="user-img">'
-                                    + '<img id="img-group-' + groupId + '" src="' + receiverAvatar + '"'
-                                    + 'alt="Image of user">'
-                                    + '</div>'
-                                    + '<div class="user-info">'
-                                    + '<a href="http://' + window.location.host + '/conversation?conversationId=' + groupId + '" class="user-name">' + groupName + '</a>'
-                                    + '</div>'
-                                    + '</div>'
-                                    + '<div class="invite-user">'
-                                    + '<span class="total-invite-user">' + numberMember + ' paticipants</span>'
-                                    + '<span data-id="add-user" onclick="toggleModal(this, true); searchMemberByKeyword(``);" class="invite toggle-btn">Invite</span>'
-                                    + '</div>'
-                                    + '<div class="setting toggle-btn" data-id="manage-user" onclick="toggleModal(this, true);  fetchUser();">'
-                                    + '<i class="fa fa-cog"></i>'
-                                    + '</div>'
-                                    + '</div>'
-                                    + '<div class="list-messages-contain">'
-                                    + '<ul id="chat" class="list-messages">'
-                                    + '</ul>'
-                                    + '</div>'
-                                    + '<form class="form-send-message" onsubmit="return sendMessage(event, ' + receiverId + ')">'
-                                    + '<ul class="list-file"></ul> '
-                                    + '<input type="text" id="message" class="txt-input" placeholder="Type message...">'
-                                    + '<label class="btn btn-image" for="attach"><i class="fa fa-file"></i></label>'
-                                    + '<input type="file" multiple id="attach">'
-                                    + '<label class="btn btn-image" for="image"><i class="fa fa-file-image-o"></i></label>'
-                                    + '<input type="file" accept="image/*" multiple id="image">'
-                                    + '<button type="submit" class="btn btn-send">'
-                                    + '<i class="fa fa-paper-plane"></i>'
-                                    + '</button>'
-                                    + '</form>';
-
-                            document.getElementById("receiver").innerHTML = rightSide;
-
-                            loadMessagesGroup();
-
-                            displayFiles();
-
-                            handleResponsive();
-                        })
-                        .catch(ex => console.log(ex));
-            }
 
             function resetChat() {
                 let chatBtn = document.querySelectorAll(".tab-control i");
@@ -875,8 +811,8 @@
                 if (msg.content !== '[P]open' && msg.content !== '[P]close') {
                     var currentChat = document.getElementById('chat').innerHTML;
                     var newChatMsg = '';
-                    if (msg.receiver !== null) {
-                        newChatMsg = customLoadMessage(msg.username, msg.content);
+                    if (msg.receiverId !== null) {
+                        newChatMsg = customLoadMessage(msg.userId, msg.receiverId, msg.content);
 
                         // Kiểm tra xem tin nhắn đã tồn tại trong phần tử chat hay chưa
                         if (currentChat.indexOf(newChatMsg) === -1) {
@@ -940,7 +876,7 @@
             }
 
             function loadMessages(receiverId) {
-                var currentChatbox = document.getElementById("message");
+                var currentChatbox = document.getElementById("chat");
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function () {
                     if (this.readyState === 4 && this.status === 200) {
@@ -948,7 +884,7 @@
                         var chatbox = "";
                         messages.forEach(msg => {
                             try {
-                                chatbox += customLoadMessage(msg.username, msg.content);
+                                chatbox += customLoadMessage(msg.userId, msg.receiverId, msg.content);
                             } catch (ex) {
 
                             }
@@ -963,15 +899,18 @@
                 xhttp.send();
             }
 
-            function customLoadMessage(sender, message) {
+            function customLoadMessage(sender, receiver, message) {
                 var imgSrc = receiverAvatar;
+                console.log(sender);
+                console.log(receiver);
                 console.log(message);
                 var msgDisplay = '<li>'
                         + '<div class="message';
-                if (receiver === sender) {
+                if (`${userId}` !== sender) {
                     msgDisplay += '">';
                 } else {
                     imgSrc = userAvatar;
+                    console.log(imgSrc);
                     msgDisplay += ' right">';
                 }
                 return msgDisplay + '<div class="message-img">'

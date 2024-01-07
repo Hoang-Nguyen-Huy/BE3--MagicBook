@@ -89,15 +89,18 @@ public class MessageDAO implements I_DAO<Message> {
             Connection con = JDBCUtil.getConnection();
 
             String sql = "SELECT * FROM message"
-                    + " WHERE UserId = ? AND receiverId = ?"
+                    + " WHERE (UserId = ? AND receiverId = ?)"
+                    + " OR (receiverId = ? AND UserId = ?)"
                     + " ORDER BY sentDate, sentTime";
 
             PreparedStatement pst = con.prepareStatement(sql);
 
             User user = UserDAO.getInstance().checkAccessToHome(userId);
-            User receiver = UserDAO.getInstance().checkAccessToHome(receiverId);
+            User receiver = UserDAO.getInstance().checkAccessToHome(receiverId);            
             pst.setString(1, user.getUserId());
             pst.setString(2, receiver.getUserId());
+            pst.setString(3, user.getUserId());
+            pst.setString(4, receiver.getUserId());
 
             ResultSet rs = pst.executeQuery();
 

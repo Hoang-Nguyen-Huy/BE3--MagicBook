@@ -51,7 +51,7 @@ public class MessageService {
     }
 
     public List<MessageDTO> getAllMessageBySenderAndReceiver(String sender, String receiver) {
-
+        
         List<Message> listMessages = MessageDAO.getInstance().selectUserId(sender, receiver);
         List<MessageDTO> listMessageDTOs = new ArrayList<MessageDTO>();
         listMessages.stream().forEach(msg -> {
