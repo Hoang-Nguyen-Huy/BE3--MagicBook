@@ -25,7 +25,7 @@ MagicBook is a social networking project that aims to connect people through a u
 The project currently lacks real-time notification functionality. Future updates may include the implementation of real-time notifications to keep users informed about activities, messages, and updates in real-time.
 
 ## Getting Started
-1. Clone the repository: `[git clone https://github.com/your-username/magicbook.git](https://github.com/Hoang-Nguyen-Huy/BE3--MagicBook.git)`
+1. Clone the repository: `https://github.com/Hoang-Nguyen-Huy/BE3--MagicBook.git`
 2. Import the project into NetBeans.
 3. Set up the MySQL database and configure the connection details in the project.
 4. Deploy the project on Apache Tomcat 8.5.
