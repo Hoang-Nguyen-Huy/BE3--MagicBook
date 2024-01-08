@@ -18,9 +18,20 @@ MagicBook is a social networking project that aims to connect people through a u
      ![image](https://github.com/Hoang-Nguyen-Huy/BE3--MagicBook/assets/121879570/fea19a6c-05dc-4c7e-bbf4-87a58f11b9f0)
      
    - Post Articles: Users can share their thoughts, updates, and multimedia content by creating posts.
-   - Messaging: Users can communicate with each other through private messaging.
+     ![image](https://github.com/Hoang-Nguyen-Huy/BE3--MagicBook/assets/121879570/e9efd87d-ffe3-4937-ad41-eb6d9211df33)
+     ![image](https://github.com/Hoang-Nguyen-Huy/BE3--MagicBook/assets/121879570/f54d82bc-39d2-498c-85cc-00a39cba5b1b)
+          
+   - Messaging: Users can communicate with each other through private messaging in real-time.
+     ![image](https://github.com/Hoang-Nguyen-Huy/BE3--MagicBook/assets/121879570/c90b6d25-f08a-4360-a1d7-c1e7b4198277)
+     
    - Group Participation: Users can join groups and engage in discussions within those groups.
+     ![image](https://github.com/Hoang-Nguyen-Huy/BE3--MagicBook/assets/121879570/afdb8be1-e67c-44c0-bf70-40d7bbbc339c)
+     ![image](https://github.com/Hoang-Nguyen-Huy/BE3--MagicBook/assets/121879570/9f890461-c5d3-4fa7-a01c-47e1d79312e3)
+     ![image](https://github.com/Hoang-Nguyen-Huy/BE3--MagicBook/assets/121879570/61e0a1af-7c5b-403c-a694-2cdc0241a8c4)
+
    - Like and Comment: Users can express their reactions to posts through likes and comments.
+     ![image](https://github.com/Hoang-Nguyen-Huy/BE3--MagicBook/assets/121879570/2c07d20b-66fb-42a8-8192-06d916538522)
+     ![image](https://github.com/Hoang-Nguyen-Huy/BE3--MagicBook/assets/121879570/161d931d-411a-48bb-b3dd-9ae08fa2f053)
 
 4. **Technology Stack:**
    - **JDK 1.8:** MagicBook is developed using Java Development Kit version 1.8.
@@ -47,3 +58,4 @@ We welcome contributions and feedback from the community. If you would like to c
 **Note:** This README is a template and may need customization based on your specific project structure and requirements. 
 ## [Click here for json library](http://www.java2s.com/Code/Jar/c/Downloadcomfasterxmljacksoncorejar.htm)
 ## [Click here for upload file library](https://drive.google.com/file/d/1RBecDy4-vdBL6fsaQ_D-znriTT8HVmjP/view)
+## [Reference for real time chat](https://www.youtube.com/watch?v=a0PPWwhw3OE&list=LL&index=1&t=460s)
