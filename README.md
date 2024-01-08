@@ -14,6 +14,9 @@ MagicBook is a social networking project that aims to connect people through a u
     ![image](https://github.com/Hoang-Nguyen-Huy/BE3--MagicBook/assets/121879570/632d2ae3-0435-4c82-90b1-99ed94550eea)
 
 3. **Social Interaction:**
+   - Home page: Include posts, header lead to message, profile
+     ![image](https://github.com/Hoang-Nguyen-Huy/BE3--MagicBook/assets/121879570/fea19a6c-05dc-4c7e-bbf4-87a58f11b9f0)
+     
    - Post Articles: Users can share their thoughts, updates, and multimedia content by creating posts.
    - Messaging: Users can communicate with each other through private messaging.
    - Group Participation: Users can join groups and engage in discussions within those groups.
